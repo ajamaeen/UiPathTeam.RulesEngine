@@ -145,4 +145,74 @@
     <value>Common</value>
     <comment>category</comment>
   </data>
+  <data name="Authentication_Category" xml:space="preserve">
+    <value>Authentication</value>
+    <comment>category</comment>
+  </data>
+  <data name="Input_Category" xml:space="preserve">
+    <value>Input</value>
+    <comment>category</comment>
+  </data>
+  <data name="Output_Category" xml:space="preserve">
+    <value>Output</value>
+    <comment>category</comment>
+  </data>
+  <data name="Options_Category" xml:space="preserve">
+    <value>Options</value>
+    <comment>category</comment>
+  </data>
+  <data name="ValidationScope_Error" xml:space="preserve">
+    <value>Cannot be used outside of a {0}.</value>
+    <comment>error message; {0} is a container activity (e.g. a scope)</comment>
+  </data>
+  <data name="ValidationValue_Error" xml:space="preserve">
+    <value>Please provide a value for {0}.</value>
+    <comment>error message; {0} is the name of a missing property</comment>
+  </data>
+  <data name="ValidationExclusiveProperties_Error" xml:space="preserve">
+    <value>Please provide a value either for {0} or {1}, but not both.</value>
+    <comment>error message; {0} &amp; {1} are mutually exclusive activities</comment>
+  </data>
+  <data name="ValidationOverloadGroup_Error" xml:space="preserve">
+    <value>Please provide values for both {0} and {1}.</value>
+    <comment>error message; {0} &amp; {1} are complementary properties</comment>
+  </data>
+  <data name="RulesPolicy_DisplayName" xml:space="preserve">
+    <value>Rules Policy</value>
+    <comment>activity name</comment>
+  </data>
+  <data name="RulesPolicy_Description" xml:space="preserve">
+    <value>This activity allows openening an existing .rules file and execute one of its rules against a TargetObject. Users can modify the ruleset (add, update, delete rules).</value>
+    <comment>activity description</comment>
+  </data>
+  <data name="RulesPolicy_ResultObject_Description" xml:space="preserve">
+    <value>Result object after applying the rules</value>
+  </data>
+  <data name="RulesPolicy_ResultObject_DisplayName" xml:space="preserve">
+    <value>Result Object</value>
+  </data>
+  <data name="RulesPolicy_RuleSetName_Description" xml:space="preserve">
+    <value>RuleSet Name</value>
+  </data>
+  <data name="RulesPolicy_RuleSetName_DisplayName" xml:space="preserve">
+    <value>RuleSet Name</value>
+  </data>
+  <data name="RulesPolicy_RulesFilePath_Description" xml:space="preserve">
+    <value>A path to url rules file (.rule)</value>
+  </data>
+  <data name="RulesPolicy_RulesFilePath_DisplayName" xml:space="preserve">
+    <value>Rules File Path</value>
+  </data>
+  <data name="RulesPolicy_TargetObject_Description" xml:space="preserve">
+    <value>Target object which to apply the rules</value>
+  </data>
+  <data name="RulesPolicy_TargetObject_DisplayName" xml:space="preserve">
+    <value>Target Object</value>
+  </data>
+  <data name="RulesPolicy_ValidationErrors_Description" xml:space="preserve">
+    <value>A collection of System.Workflow.ComponentModel.Compiler.ValidationError</value>
+  </data>
+  <data name="RulesPolicy_ValidationErrors_DisplayName" xml:space="preserve">
+    <value>Validation Errors</value>
+  </data>
 </root>
