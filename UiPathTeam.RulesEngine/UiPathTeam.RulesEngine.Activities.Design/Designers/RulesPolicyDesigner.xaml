@@ -55,8 +55,8 @@
                                   HorizontalAlignment="Left" CheckFileExists="False" />
 
             <ComboBox  Grid.Row="1" 
-                       Grid.Column="1"  Margin="5,5,5,5" Padding="0,0,0,0"  Name="dataSourceCombo"                                               
-                       SelectionChanged="dataSourceCombo_SelectionChanged"/>
+                       Grid.Column="1"  Margin="5,5,5,5" Padding="0,0,0,0"  Name="RuleSetNameList"                                               
+                       SelectionChanged="RuleSetNameList_SelectionChanged"/>
 
             <sapv:ExpressionTextBox 
             Expression="{Binding Path=ModelItem.TargetObject, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}" 
@@ -73,10 +73,17 @@
             MaxLines="1"
             Grid.Row="3" Grid.Column="1" Margin="5, 5" />
 
-            <Button Content="View RuleSet" Name="viewRuleSetButton" Click="viewRuleSetButton_Click"
-                    Width="200"
-                    Height="25"                    
+            <Button Content="Edit RuleSets" Name="editRuleSets" Click="EditRuleSets_Click"
+                    Width="100"
+                    Height="25"      
+                    HorizontalAlignment="Left"
                     Grid.Row="4" Grid.Column="1" Margin="5, 5"/>
+
+            <Button Content="Edit Rules" Name="EditRules" Click="EditRules_Click"
+                    Width="100"
+                    Height="25"      
+                    HorizontalAlignment="Right"
+                    Grid.Row="4" Grid.Column="1" Margin="5, 5"/>          
 
         </Grid>
 

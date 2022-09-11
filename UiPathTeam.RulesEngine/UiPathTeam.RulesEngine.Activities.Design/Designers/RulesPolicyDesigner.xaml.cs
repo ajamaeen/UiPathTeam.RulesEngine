@@ -21,14 +21,23 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
     /// </summary>
     public partial class RulesPolicyDesigner
     {
+        private readonly string ruleSetNameProperty= "RuleSetName";
+        private readonly string ruleFilePathProperty= "RulesFilePath";
+        private readonly string targetObjectProperty= "TargetObject";
+
         public RulesPolicyDesigner()
         {
             InitializeComponent();
         }
 
-        public void viewRuleSetButton_Click(object sender, RoutedEventArgs e)
+        public void EditRuleSets_Click(object sender, RoutedEventArgs e)
         {
-            string rulesFilePath = ModelItem.GetInArgumentValue<string>("RulesFilePath");
+
+        }
+
+        public void EditRules_Click(object sender, RoutedEventArgs e)
+        {
+            string rulesFilePath = ModelItem.GetInArgumentValue<string>(ruleFilePathProperty);
 
             if (string.IsNullOrWhiteSpace(rulesFilePath))
             {
@@ -42,14 +51,14 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
                 return;
             }
 
-            string ruleSetName = ModelItem.GetInArgumentValue<string>("RuleSetName");
+            string ruleSetName = ModelItem.GetInArgumentValue<string>(ruleSetNameProperty);
             if (string.IsNullOrWhiteSpace(ruleSetName))
             {
                 System.Windows.MessageBox.Show("RuleSet Name needs to be configured before viewing or editing the rules");
                 return;
             }
 
-            object targetObject = ModelItem.GetInArgumentValue<object>("TargetObject");
+            object targetObject = ModelItem.GetInArgumentValue<object>(targetObjectProperty);
             if (targetObject == null)
             {
                 System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
@@ -137,7 +146,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
             var args = (FileSelectedRoutedEventArgs)e;
             if (args != null)
             {
-                ModelItem.Properties["RulesFilePath"].SetValue(new InArgument<string>(args.Path));
+                ModelItem.Properties[ruleFilePathProperty].SetValue(new InArgument<string>(args.Path));
                 try
                 {
                     using (Stream stream = new FileStream(args.Path, FileMode.Open))
@@ -158,15 +167,15 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
             }
         }
 
-        private void dataSourceCombo_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void RuleSetNameList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (dataSourceCombo.SelectedValue != null)
+            if (RuleSetNameList.SelectedValue != null)
             {
-                ModelItem.Properties["RuleSetName"].SetValue(new InArgument<string>(dataSourceCombo.SelectedValue.ToString()));
+                ModelItem.Properties[ruleSetNameProperty].SetValue(new InArgument<string>(RuleSetNameList.SelectedValue.ToString()));
             }
             else
             {
-                ModelItem.Properties["RuleSetName"].SetValue(new InArgument<string>(""));
+                ModelItem.Properties[ruleSetNameProperty].SetValue(new InArgument<string>(""));
             }
         }
 
