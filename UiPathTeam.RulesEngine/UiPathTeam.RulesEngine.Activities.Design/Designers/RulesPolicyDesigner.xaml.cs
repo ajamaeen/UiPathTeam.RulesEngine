@@ -155,14 +155,14 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
                         {
                             WorkflowMarkupSerializer ser = new WorkflowMarkupSerializer();
                             var ruleDefs = ser.Deserialize(reader) as RuleDefinitions;
-                            dataSourceCombo.ItemsSource = ruleDefs.RuleSets.Select(x => x.Name).ToList();
+                            RuleSetNameList.ItemsSource = ruleDefs.RuleSets.Select(x => x.Name).ToList();
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     //TODO:to handel a new file
-                    dataSourceCombo.ItemsSource = new List<string>();
+                    RuleSetNameList.ItemsSource = new List<string>();
                 }
             }
         }
