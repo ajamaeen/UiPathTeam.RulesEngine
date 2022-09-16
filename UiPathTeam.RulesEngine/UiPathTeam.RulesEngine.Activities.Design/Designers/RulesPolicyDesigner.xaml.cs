@@ -2,6 +2,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
 {
     using System;
     using System.Activities;
+    using System.Activities.Expressions;
     using System.Activities.Presentation;
     using System.Activities.Presentation.Model;
     using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
     using System.Xml;
     using UiPath.Shared.Activities.Design.Controls;
     using UiPath.Shared.Activities.Design.Services;
+    using UiPathTeam.RulesEngine.RuleEditors;
+    using MessageBox = System.Windows.MessageBox;
 
     /// <summary>
     /// Interaction logic for RulesPolicyDesigner.xaml
@@ -33,10 +36,6 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
         public void EditRuleSets_Click(object sender, RoutedEventArgs e)
         {
 
-        }
-
-        public void EditRules_Click(object sender, RoutedEventArgs e)
-        {
             string rulesFilePath = ModelItem.GetInArgumentValue<string>(ruleFilePathProperty);
 
             if (string.IsNullOrWhiteSpace(rulesFilePath))
@@ -45,25 +44,12 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
                 return;
             }
 
-            if (!File.Exists(rulesFilePath))
-            {
-                System.Windows.MessageBox.Show(string.Format("Rules file path provided not found ({0})", rulesFilePath));
-                return;
-            }
-
-            string ruleSetName = ModelItem.GetInArgumentValue<string>(ruleSetNameProperty);
-            if (string.IsNullOrWhiteSpace(ruleSetName))
-            {
-                System.Windows.MessageBox.Show("RuleSet Name needs to be configured before viewing or editing the rules");
-                return;
-            }
-
-            object targetObject = ModelItem.GetInArgumentValue<object>(targetObjectProperty);
-            if (targetObject == null)
-            {
-                System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
-                return;
-            }
+            //object targetObject = ModelItem.GetInArgumentValue<object>(targetObjectProperty);
+            //if (targetObject == null)
+            //{
+            //    System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
+            //    return;
+            //}
 
             ModelItem targetObjectModelItem = ModelItem.Properties["TargetObject"].Value;
             if (targetObjectModelItem == null || targetObjectModelItem.GetCurrentValue() == null)
@@ -79,6 +65,92 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
                 System.Windows.MessageBox.Show("Invalid target object");
                 return;
             }
+
+            Type targetObjectType = targetObjArg.ArgumentType;
+            string ruleSetName = ModelItem.GetInArgumentValue<string>(ruleSetNameProperty);
+
+            CreateEmptyFileIfNotExists(rulesFilePath,ruleSetName);
+
+            // popup the dialog for viewing the rules
+            var ruleSetDialog = new RuleSetToolkitEditor();
+            ruleSetDialog.LoadFile(rulesFilePath, targetObjectType);
+            var result = ruleSetDialog.ShowDialog();
+            if (result == DialogResult.OK) //If OK was pressed
+            {
+                //TODO:Refresh Activity
+            }
+        }
+
+        private void CreateEmptyFileIfNotExists(string filePath,string ruleSetName)
+        {
+            if (!File.Exists(filePath))
+            {
+                //create empty file
+                File.Create(filePath).Close();
+
+                WorkflowMarkupSerializer ser = new WorkflowMarkupSerializer();
+
+                using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    RuleDefinitions ruleDefs = new RuleDefinitions();
+
+                    if (!string.IsNullOrWhiteSpace(ruleSetName))
+                    {
+                        var ruleSet = new RuleSet()
+                        {
+                            Name = ruleSetName,
+                        };
+                        ruleDefs.RuleSets.Add(ruleSet);
+                    }
+
+                    using (var xmlTW = new System.Xml.XmlTextWriter(filePath, null))
+                    {
+                        ser.Serialize(xmlTW, ruleDefs);
+                    }
+                }
+            }
+        }
+
+        public void EditRules_Click(object sender, RoutedEventArgs e)
+        {
+            string rulesFilePath = ModelItem.GetInArgumentValue<string>(ruleFilePathProperty);
+
+            if (string.IsNullOrWhiteSpace(rulesFilePath))
+            {
+                System.Windows.MessageBox.Show("Rules file Path needs to be configured before viewing or editing the rules");
+                return;
+            }
+
+            string ruleSetName = ModelItem.GetInArgumentValue<string>(ruleSetNameProperty);
+            if (string.IsNullOrWhiteSpace(ruleSetName))
+            {
+                System.Windows.MessageBox.Show("RuleSet Name needs to be configured before viewing or editing the rules");
+                return;
+            }
+
+            //var targetObject = ModelItem.GetInArgumentValue<object>(targetObjectProperty);
+            //if (targetObject == null)
+            //{
+            //    System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
+            //    return;
+            //}
+
+            ModelItem targetObjectModelItem = ModelItem.Properties["TargetObject"].Value;
+            if (targetObjectModelItem == null || targetObjectModelItem.GetCurrentValue() == null)
+            {
+                System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
+                return;
+            }
+
+            //// verify that target object is correctly configured
+            InArgument targetObjArg = targetObjectModelItem.GetCurrentValue() as InArgument;
+            if (targetObjArg == null)
+            {
+                System.Windows.MessageBox.Show("Invalid target object");
+                return;
+            }
+
+            CreateEmptyFileIfNotExists(rulesFilePath, ruleSetName);
 
             // open the ruleset editor
             Type targetObjectType = targetObjArg.ArgumentType;
@@ -104,7 +176,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
 
                     // popup the dialog for viewing the rules
                     ruleSetDialog = new RuleSetDialog(targetObjectType, null, ruleSet);
-                    TweakRuleSetDialogToResizable(ruleSetDialog);
+                    //TweakRuleSetDialogToResizable(ruleSetDialog);
                     result = ruleSetDialog.ShowDialog();
                 }
                 finally
@@ -126,7 +198,10 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
                     }
                     try
                     {
-                        ser.Serialize(new System.Xml.XmlTextWriter(rulesFilePath, null), ruleDefs);
+                        using (var xmlTW = new System.Xml.XmlTextWriter(rulesFilePath, null))
+                        {
+                            ser.Serialize(xmlTW, ruleDefs);
+                        }
                     }
                     catch (UnauthorizedAccessException)
                     {
@@ -134,7 +209,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
                         FileInfo fileInfo = new FileInfo(rulesFilePath);
                         // create local file by adding a random suffix to original filename
                         string localFileCopy = fileInfo.Name.Substring(0, fileInfo.Name.IndexOf('.')) + new Random().Next() + fileInfo.Extension;
-                        ser.Serialize(new System.Xml.XmlTextWriter((string)localFileCopy, null), ruleDefs);
+
+                        using (var xmlTW = new System.Xml.XmlTextWriter(localFileCopy, null))
+                        {
+                            ser.Serialize(xmlTW, ruleDefs);
+                        }
                         System.Windows.MessageBox.Show("Rules file is not writeable. Created copy of your changes in " + localFileCopy);
                     }
                 }
