@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Designers\RulesPolicyDesigner.xaml" />
+    <None Remove="Dialogs\RuleSetEditorDialog.xaml" />
   </ItemGroup>
   <!-- Package Icon -->
   <ItemGroup>
@@ -59,6 +60,9 @@
 	<ItemGroup>
 		<Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Activities" />
+    <Reference Include="System.Windows.Controls.Ribbon" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Workflow.Activities" />
     <Reference Include="System.Workflow.ComponentModel" />
@@ -85,6 +89,9 @@
     <Page Include="Designers\RulesPolicyDesigner.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>
+    <Page Include="Dialogs\RuleSetEditorDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Themes\Icons.xaml">
       <Generator>XamlIntelliSenseFileGenerator</Generator>
       <SubType>Designer</SubType>
@@ -93,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UiPathTeam.RulesEngine.Activities\UiPathTeam.RulesEngine.Activities.csproj" PrivateAssets="All" />
+    <ProjectReference Include="..\UiPathTeam.RulesEngine\UiPathTeam.RulesEngine.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">

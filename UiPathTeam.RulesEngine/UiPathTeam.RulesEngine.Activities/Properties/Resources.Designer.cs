@@ -133,6 +133,42 @@ namespace UiPathTeam.RulesEngine.Activities.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string RuleSetEditor_Description {
+            get {
+                return ResourceManager.GetString("RuleSetEditor_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RuleSetEditor.
+        /// </summary>
+        public static string RuleSetEditor_DisplayName {
+            get {
+                return ResourceManager.GetString("RuleSetEditor_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string RuleSetEditorDialog_Description {
+            get {
+                return ResourceManager.GetString("RuleSetEditorDialog_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RuleSetEditorDialog.
+        /// </summary>
+        public static string RuleSetEditorDialog_DisplayName {
+            get {
+                return ResourceManager.GetString("RuleSetEditorDialog_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This activity allows openening an existing .rules file and execute one of its rules against a TargetObject. Users can modify the ruleset (add, update, delete rules)..
         /// </summary>
         public static string RulesPolicy_Description {

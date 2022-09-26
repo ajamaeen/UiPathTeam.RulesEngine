@@ -1,8 +1,7 @@
-namespace UiPathTeam.RulesEngine.Activities.Design.Designers
+namespace UiPathTeam.RulesEngine.Activities.Design
 {
     using System;
     using System.Activities;
-    using System.Activities.Expressions;
     using System.Activities.Presentation;
     using System.Activities.Presentation.Model;
     using System.Collections.Generic;
@@ -16,6 +15,8 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
     using System.Xml;
     using UiPath.Shared.Activities.Design.Controls;
     using UiPath.Shared.Activities.Design.Services;
+    using UiPathTeam.RulesEngine.Activities.Design;
+    using UiPathTeam.RulesEngine.Activities.Design.Dialogs;
     using UiPathTeam.RulesEngine.RuleEditors;
     using MessageBox = System.Windows.MessageBox;
 
@@ -24,9 +25,9 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
     /// </summary>
     public partial class RulesPolicyDesigner
     {
-        private readonly string ruleSetNameProperty= "RuleSetName";
-        private readonly string ruleFilePathProperty= "RulesFilePath";
-        private readonly string targetObjectProperty= "TargetObject";
+        private readonly string ruleSetNameProperty = "RuleSetName";
+        private readonly string ruleFilePathProperty = "RulesFilePath";
+        private readonly string targetObjectProperty = "TargetObject";
 
         public RulesPolicyDesigner()
         {
@@ -35,53 +36,56 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
 
         public void EditRuleSets_Click(object sender, RoutedEventArgs e)
         {
-
             string rulesFilePath = ModelItem.GetInArgumentValue<string>(ruleFilePathProperty);
 
             if (string.IsNullOrWhiteSpace(rulesFilePath))
             {
-                System.Windows.MessageBox.Show("Rules file Path needs to be configured before viewing or editing the rules");
+                System.Windows.Forms.MessageBox.Show("Rules file Path needs to be configured before viewing or editing the rules.",
+                                                     "RuleSet Property Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            //object targetObject = ModelItem.GetInArgumentValue<object>(targetObjectProperty);
-            //if (targetObject == null)
+            RuleSetEditorDialog ruleSetEditorDialog = new RuleSetEditorDialog(ModelItem);
+            ruleSetEditorDialog.Show();
+
+            ////object targetObject = ModelItem.GetInArgumentValue<object>(targetObjectProperty);
+            ////if (targetObject == null)
+            ////{
+            ////    System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
+            ////    return;
+            ////}
+
+            //ModelItem targetObjectModelItem = ModelItem.Properties["TargetObject"].Value;
+            //if (targetObjectModelItem == null || targetObjectModelItem.GetCurrentValue() == null)
             //{
             //    System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
             //    return;
             //}
 
-            ModelItem targetObjectModelItem = ModelItem.Properties["TargetObject"].Value;
-            if (targetObjectModelItem == null || targetObjectModelItem.GetCurrentValue() == null)
-            {
-                System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
-                return;
-            }
+            ////// verify that target object is correctly configured
+            //InArgument targetObjArg = targetObjectModelItem.GetCurrentValue() as InArgument;
+            //if (targetObjArg == null)
+            //{
+            //    System.Windows.MessageBox.Show("Invalid target object");
+            //    return;
+            //}
 
-            //// verify that target object is correctly configured
-            InArgument targetObjArg = targetObjectModelItem.GetCurrentValue() as InArgument;
-            if (targetObjArg == null)
-            {
-                System.Windows.MessageBox.Show("Invalid target object");
-                return;
-            }
+            //Type targetObjectType = targetObjArg.ArgumentType;
+            //string ruleSetName = ModelItem.GetInArgumentValue<string>(ruleSetNameProperty);
 
-            Type targetObjectType = targetObjArg.ArgumentType;
-            string ruleSetName = ModelItem.GetInArgumentValue<string>(ruleSetNameProperty);
+            //CreateEmptyFileIfNotExists(rulesFilePath,ruleSetName);
 
-            CreateEmptyFileIfNotExists(rulesFilePath,ruleSetName);
-
-            // popup the dialog for viewing the rules
-            var ruleSetDialog = new RuleSetToolkitEditor();
-            ruleSetDialog.LoadFile(rulesFilePath, targetObjectType);
-            var result = ruleSetDialog.ShowDialog();
-            if (result == DialogResult.OK) //If OK was pressed
-            {
-                //TODO:Refresh Activity
-            }
+            //// popup the dialog for viewing the rules
+            //var ruleSetDialog = new RuleSetToolkitEditor();
+            //ruleSetDialog.LoadFile(rulesFilePath, targetObjectType);
+            //var result = ruleSetDialog.ShowDialog();
+            //if (result == DialogResult.OK) //If OK was pressed
+            //{
+            //    //TODO:Refresh Activity
+            //}
         }
 
-        private void CreateEmptyFileIfNotExists(string filePath,string ruleSetName)
+        private void CreateEmptyFileIfNotExists(string filePath, string ruleSetName)
         {
             if (!File.Exists(filePath))
             {
@@ -226,22 +230,18 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Designers
             if (args != null)
             {
                 ModelItem.Properties[ruleFilePathProperty].SetValue(new InArgument<string>(args.Path));
-                try
+                if (!File.Exists(args.Path))
                 {
-                    using (Stream stream = new FileStream(args.Path, FileMode.Open))
+                    using (Stream stream = new FileStream(args.Path, FileMode.OpenOrCreate))
                     {
-                        using (XmlTextReader reader = new XmlTextReader(stream))
-                        {
-                            WorkflowMarkupSerializer ser = new WorkflowMarkupSerializer();
-                            var ruleDefs = ser.Deserialize(reader) as RuleDefinitions;
-                            RuleSetNameList.ItemsSource = ruleDefs.RuleSets.Select(x => x.Name).ToList();
-                        }
                     }
+                    RuleDefinitions ruleDefinitions = new RuleDefinitions();
+                    WorkflowMarkupSerializer ser = new WorkflowMarkupSerializer();
+                    ser.Serialize(new XmlTextWriter(args.Path, null), ruleDefinitions);
                 }
-                catch (Exception ex)
+                else
                 {
-                    //TODO:to handel a new file
-                    RuleSetNameList.ItemsSource = new List<string>();
+                    //TODO: Reload rule sets
                 }
             }
         }

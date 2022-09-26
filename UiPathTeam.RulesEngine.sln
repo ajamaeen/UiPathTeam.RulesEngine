@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.3.32901.215
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32428.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UiPathTeam.RulesEngine", "UiPathTeam.RulesEngine", "{6BA4EF26-882C-470F-9493-2E67C5C2D203}"
 EndProject
@@ -17,11 +17,17 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UiPath.Shared.Activities", 
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "UiPath.Shared.Activities.Design", "Shared\UiPath.Shared.Activities.Design\UiPath.Shared.Activities.Design.shproj", "{DF9C43F0-ADD3-4FBF-995E-84B92F9CBF25}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiPathTeam.RulesEngine.RuleEditors", "UiPathTeam.RulesEngine\UiPathTeam.RulesEngine.RuleEditors\UiPathTeam.RulesEngine.RuleEditors.csproj", "{0CF5B141-6A42-4037-9D3D-BB017ED2FE36}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{A8A19C7F-2FF9-4EB5-BFE1-8BC24D61FCD9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsControlLibrary1", "WindowsFormsControlLibrary1\WindowsFormsControlLibrary1.csproj", "{628FE16B-D969-481D-BDC9-2D845B33FE43}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UiPathTeam.RulesEngine.Test", "Test\UiPathTeam.RulesEngine.Test\UiPathTeam.RulesEngine.Test.csproj", "{B70410E3-645B-4EAE-8753-48DF7FE875A3}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\UiPath.Shared.Activities\UiPath.Shared.Activities.projitems*{4546856d-ea50-45c6-9419-eeeacb5a80aa}*SharedItemsImports = 13
+		Shared\UiPath.Shared.Activities\UiPath.Shared.Activities.projitems*{aa8667c4-6482-49fb-900e-42b63240f76b}*SharedItemsImports = 5
+		Shared\UiPath.Shared.Activities.Design\UiPath.Shared.Activities.Design.projitems*{df9c43f0-add3-4fbf-995e-84b92f9cbf25}*SharedItemsImports = 13
+		Shared\UiPath.Shared.Activities.Design\UiPath.Shared.Activities.Design.projitems*{efcd8cd4-d82a-4d9b-899a-556fa8c0129a}*SharedItemsImports = 5
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -39,14 +45,10 @@ Global
 		{EFCD8CD4-D82A-4D9B-899A-556FA8C0129A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFCD8CD4-D82A-4D9B-899A-556FA8C0129A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFCD8CD4-D82A-4D9B-899A-556FA8C0129A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0CF5B141-6A42-4037-9D3D-BB017ED2FE36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0CF5B141-6A42-4037-9D3D-BB017ED2FE36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0CF5B141-6A42-4037-9D3D-BB017ED2FE36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0CF5B141-6A42-4037-9D3D-BB017ED2FE36}.Release|Any CPU.Build.0 = Release|Any CPU
-		{628FE16B-D969-481D-BDC9-2D845B33FE43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{628FE16B-D969-481D-BDC9-2D845B33FE43}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{628FE16B-D969-481D-BDC9-2D845B33FE43}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{628FE16B-D969-481D-BDC9-2D845B33FE43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B70410E3-645B-4EAE-8753-48DF7FE875A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B70410E3-645B-4EAE-8753-48DF7FE875A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B70410E3-645B-4EAE-8753-48DF7FE875A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B70410E3-645B-4EAE-8753-48DF7FE875A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,16 +59,9 @@ Global
 		{EFCD8CD4-D82A-4D9B-899A-556FA8C0129A} = {6BA4EF26-882C-470F-9493-2E67C5C2D203}
 		{4546856D-EA50-45C6-9419-EEEACB5A80AA} = {4B2386EB-7BAF-40F4-80EB-622177EC0EEC}
 		{DF9C43F0-ADD3-4FBF-995E-84B92F9CBF25} = {4B2386EB-7BAF-40F4-80EB-622177EC0EEC}
-		{0CF5B141-6A42-4037-9D3D-BB017ED2FE36} = {6BA4EF26-882C-470F-9493-2E67C5C2D203}
-		{628FE16B-D969-481D-BDC9-2D845B33FE43} = {6BA4EF26-882C-470F-9493-2E67C5C2D203}
+		{B70410E3-645B-4EAE-8753-48DF7FE875A3} = {A8A19C7F-2FF9-4EB5-BFE1-8BC24D61FCD9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {13C120F2-8F52-45CD-9F63-DDE19DB3C258}
-	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Shared\UiPath.Shared.Activities\UiPath.Shared.Activities.projitems*{4546856d-ea50-45c6-9419-eeeacb5a80aa}*SharedItemsImports = 13
-		Shared\UiPath.Shared.Activities\UiPath.Shared.Activities.projitems*{aa8667c4-6482-49fb-900e-42b63240f76b}*SharedItemsImports = 5
-		Shared\UiPath.Shared.Activities.Design\UiPath.Shared.Activities.Design.projitems*{df9c43f0-add3-4fbf-995e-84b92f9cbf25}*SharedItemsImports = 13
-		Shared\UiPath.Shared.Activities.Design\UiPath.Shared.Activities.Design.projitems*{efcd8cd4-d82a-4d9b-899a-556fa8c0129a}*SharedItemsImports = 5
 	EndGlobalSection
 EndGlobal

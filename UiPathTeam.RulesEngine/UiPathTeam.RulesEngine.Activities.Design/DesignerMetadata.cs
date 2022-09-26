@@ -1,7 +1,7 @@
 using System.Activities.Presentation.Metadata;
 using System.ComponentModel;
 using System.ComponentModel.Design;
-using UiPathTeam.RulesEngine.Activities.Design.Designers;
+using UiPathTeam.RulesEngine.Activities.Design;
 using UiPathTeam.RulesEngine.Activities.Design.Properties;
 
 namespace UiPathTeam.RulesEngine.Activities.Design
