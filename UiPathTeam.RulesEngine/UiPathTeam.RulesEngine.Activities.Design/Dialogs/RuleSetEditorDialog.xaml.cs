@@ -34,7 +34,6 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         private readonly int maxMinorVersions = 100;
         private readonly int maxMajorVersions = 1000;
         private readonly WorkflowMarkupSerializer serializer = new WorkflowMarkupSerializer();
-        private string connectionString;
 
         public RuleSetEditorDialog(ModelItem modelItem)
         {
@@ -42,12 +41,14 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             ModelItem = modelItem;
             Context = modelItem.GetEditingContext();
             rulesFilePath = ModelItem.GetInArgumentValue<string>("RulesFilePath");
+            InitializeData();
         }
 
         public RuleSetEditorDialog(string rulesFilePath)
         {
             InitializeComponent();
             this.rulesFilePath = rulesFilePath;
+            InitializeData();
         }
 
         private void New_Click(object sender, RoutedEventArgs e)
@@ -64,14 +65,16 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
 
                 if (parentNode == null)
                 {
-                    parentNode = new TreeNode(ruleSetData.Name);
+                    parentNode = new TreeNode(ruleSetData.Name);                    
                 }
 
                 TreeNode newVersionNode = new TreeNode(VersionTreeNodeText(ruleSetData.MajorVersion, ruleSetData.MinorVersion));
-                parentNode.Nodes.Add(newVersionNode);
+                parentNode.Nodes.Add(newVersionNode);                
                 //treeView1.Sort();                
                 TreeRuleSets.Items.Add(parentNode);
                 ruleSetDataDictionary.Add(newVersionNode, ruleSetData);
+                //TreeRuleSets.Items.Clear();
+                //TreeRuleSets.ItemsSource = ruleSetDataDictionary;
 
                 this.SetSelectedNode(newVersionNode);
             }
@@ -497,12 +500,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             {
                 List<RuleSetData> dirtyRSDs = new List<RuleSetData>();
                 RuleDefinitions ruleDefinitions = null;
-                WorkflowMarkupSerializer workflowMarkupSerializer = new WorkflowMarkupSerializer();
-
                 using (Stream stream = new FileStream(rulesFilePath, FileMode.Open))
                 {
                     using (XmlTextReader reader = new XmlTextReader(stream))
                     {
+                        WorkflowMarkupSerializer workflowMarkupSerializer = new WorkflowMarkupSerializer();
                         ruleDefinitions = workflowMarkupSerializer.Deserialize(reader) as RuleDefinitions;
                     }
                 }
@@ -543,6 +545,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
 
                 try
                 {
+                    WorkflowMarkupSerializer workflowMarkupSerializer = new WorkflowMarkupSerializer();
                     workflowMarkupSerializer.Serialize(new XmlTextWriter(rulesFilePath, null), ruleDefinitions);
                 }
                 catch (UnauthorizedAccessException ex)
@@ -620,6 +623,92 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             SaveToFile();
+        }
+
+        private void InitializeData()
+        {
+            if (this.ContinueRuleDefinitionsChange())
+            {
+                selectedRuleSetData = null;
+                List<RuleSetData> ruleSetDataCollection = this.GetRuleSets();
+                this.BuildTree(ruleSetDataCollection);
+
+                this.EnableApplicationFields(true);
+                this.EnableRuleSetFields(false);
+            }
+        }
+
+        private void EnableApplicationFields(bool enable)
+        {
+            btnNew.IsEnabled = enable;
+            //ruleSetNameCollectionLabel.Enabled = enable;
+            if (!enable)
+            {
+                this.EnableRuleSetFields(enable);
+            }
+        }
+
+        private List<RuleSetData> GetRuleSets()
+        {
+            List<RuleSetData> ruleSetDataCollection = new List<RuleSetData>();
+            dirty = false;
+
+            using (Stream stream = new FileStream(rulesFilePath, FileMode.Open))
+            {
+                WorkflowMarkupSerializer ser = new WorkflowMarkupSerializer();
+                RuleDefinitions ruleDefinitions;
+                try
+                {
+                    using (XmlTextReader reader = new XmlTextReader(stream))
+                    {
+                        ruleDefinitions = ser.Deserialize(reader) as RuleDefinitions;
+
+                        foreach (var ruleset in ruleDefinitions.RuleSets)
+                        {
+                            RuleSetData data = new RuleSetData();
+
+                            string[] nameSplitted = ruleset.Name.Split('-');
+                            if (nameSplitted.Length == 3)
+                            {
+                                data.Name = nameSplitted[0];
+                                if(int.TryParse(nameSplitted[1], out int majorVersion))
+                                {
+                                    data.MajorVersion = majorVersion;
+                                }
+
+                                if (int.TryParse(nameSplitted[1], out int minorVersion))
+                                {
+                                    data.MinorVersion = minorVersion;
+                                }
+                            }
+                            else
+                            {
+                                data.Name = ruleset.Name;
+                            }
+                            data.OriginalName = data.Name; // will be used later to see if one of these key values changed                                                  
+                            data.OriginalMajorVersion = data.MajorVersion;                    
+                            data.OriginalMinorVersion = data.MinorVersion;
+                            data.RuleSetDefinition = SerializeRuleSet(ruleset);
+                            //data.Status = reader.GetInt16(4);
+                            //data.AssemblyPath = reader.GetString(5);
+                            //data.ActivityName = reader.GetString(6);
+                            //data.ModifiedDate = reader.GetDateTime(7);
+                            data.Dirty = false;
+                            ruleSetDataCollection.Add(data);
+                        }
+                    }
+                }
+                catch (InvalidCastException)
+                {
+                    System.Windows.Forms.MessageBox.Show("Error parsing table row.", "RuleSet Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    if (stream != null)
+                        stream.Dispose();
+                }
+            }
+            return ruleSetDataCollection;
         }
     }
 }
