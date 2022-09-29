@@ -62,13 +62,13 @@
         <StackPanel Grid.Row="2"   Margin="10,0,0,5" Visibility="{Binding ActualHeight, ElementName=contentControl}"
                     Orientation="Horizontal" >
             <Label  Margin="5,5,5,5" Padding="0,0,0,0" Name="lblMajorVersion" Content="Major Version" />
-            <TextBox Margin="5,5,5,5" Width="200"  x:Name="txtMajorVersion" LostFocus="txtMajorVersion_LostFocus" />
+            <TextBox Margin="5,5,5,5" Width="200"  x:Name="txtMajorVersion" LostFocus="txtMajorVersion_LostFocus" PreviewTextInput="txtMajorVersion_PreviewTextInput"  DataObject.Pasting="TextBoxPasting"/>
         </StackPanel>
 
         <StackPanel Grid.Row="2"   Margin="10,0,0,5" Visibility="{Binding ActualHeight, ElementName=contentControl}"
                     Orientation="Horizontal" >
             <Label  Margin="5,5,5,5" Padding="0,0,0,0" Name="lblMinroVersion" Content="Minor Version" />
-            <TextBox Margin="5,5,5,5" Width="200"  x:Name="txtMinorVersion" LostFocus="txtMinorVersion_LostFocus" />
+            <TextBox Margin="5,5,5,5" Width="200"  x:Name="txtMinorVersion" LostFocus="txtMinorVersion_LostFocus" PreviewTextInput="txtMinorVersion_PreviewTextInput"   DataObject.Pasting="TextBoxPasting" />
         </StackPanel>
 
     </StackPanel>
