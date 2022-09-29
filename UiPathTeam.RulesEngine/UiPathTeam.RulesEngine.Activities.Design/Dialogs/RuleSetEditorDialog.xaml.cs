@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,6 +14,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -19,6 +22,7 @@ using System.Windows.Shapes;
 using System.Workflow.Activities.Rules;
 using System.Workflow.ComponentModel.Serialization;
 using System.Xml;
+using System.Xml.Linq;
 using UiPath.Shared.Activities.Design.Services;
 
 namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
@@ -26,7 +30,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
     // Interaction logic for RuleSetEditorDialog.xaml
     public partial class RuleSetEditorDialog : WorkflowElementDialog
     {
-        private Dictionary<TreeNode, RuleSetData> ruleSetDataDictionary = new Dictionary<TreeNode, RuleSetData>();
+        private Dictionary<TreeViewItem, RuleSetData> ruleSetDataDictionary = new Dictionary<TreeViewItem, RuleSetData>();
         private bool dirty; //indicates if any RuleSetData has been modified
         private readonly string rulesFilePath;
         private RuleSetData selectedRuleSetData;
@@ -61,15 +65,19 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         {
             if (ruleSetData != null)
             {
-                TreeNode parentNode = this.FindParentNode(ruleSetData);
+                TreeViewItem parentNode = this.FindParentNode(ruleSetData);
 
                 if (parentNode == null)
                 {
-                    parentNode = new TreeNode(ruleSetData.Name);                    
+                    parentNode = new TreeViewItem();
+                    parentNode.Header = ruleSetData.Name;
+
                 }
 
-                TreeNode newVersionNode = new TreeNode(VersionTreeNodeText(ruleSetData.MajorVersion, ruleSetData.MinorVersion));
-                parentNode.Nodes.Add(newVersionNode);                
+                TreeViewItem newVersionNode = new TreeViewItem();
+                newVersionNode.Header = VersionTreeNodeText(ruleSetData.MajorVersion, ruleSetData.MinorVersion);
+
+                parentNode.Items.Add(newVersionNode);                
                 //treeView1.Sort();                
                 TreeRuleSets.Items.Add(parentNode);
                 ruleSetDataDictionary.Add(newVersionNode, ruleSetData);
@@ -102,7 +110,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             //}
         }
 
-        private void SetSelectedNode(TreeNode node)
+        private void SetSelectedNode(TreeViewItem node)
         {
             if (node != null && node.Parent != null)
             {
@@ -152,13 +160,13 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             //membersBox.Items.Clear();
         }
 
-        private TreeNode FindParentNode(RuleSetData data)
+        private TreeViewItem FindParentNode(RuleSetData data)
         {
             if (data != null)
             {
-                foreach (TreeNode node in TreeRuleSets.Items)
+                foreach (TreeViewItem node in TreeRuleSets.Items)
                 {
-                    if (String.CompareOrdinal(node.Text, data.Name) == 0)
+                    if (String.CompareOrdinal(node.Header.ToString(), data.Name) == 0)
                         return node;
                 }
             }
@@ -241,7 +249,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         private void TreeRuleSets_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             RuleSetData data;
-            var node = (TreeNode)e.NewValue;
+            var node = (TreeViewItem)e.NewValue;
             if (node != null && ruleSetDataDictionary.TryGetValue(node, out data))
             {
                 selectedRuleSetData = data;
@@ -286,28 +294,24 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             TreeRuleSets.Items.Clear();
             //treeView1.Nodes.Clear();
             RuleSetData lastData = null;
-            TreeNode lastRuleSetNameNode = null;
+            TreeViewItem lastRuleSetNameNode = null;
             foreach (RuleSetData data in ruleSetDataCollection)
             {
                 if (lastData == null || lastData.Name != data.Name) //new ruleset name
                 {
-                    TreeNode newNode = new TreeNode(data.Name);
-                    lastRuleSetNameNode = newNode;
-
-                    TreeNode newVersionNode = new TreeNode(VersionTreeNodeText(data.MajorVersion, data.MinorVersion));
-                    lastRuleSetNameNode.Nodes.Add(newVersionNode);
-                    ruleSetDataDictionary.Add(newVersionNode, data);
-                    lastData = data;
+                    TreeViewItem newNode = new TreeViewItem();
+                    newNode.Header = data.Name;
 
                     TreeRuleSets.Items.Add(newNode);
+                    lastRuleSetNameNode = newNode;
                 }
-                else
-                {
-                    TreeNode newVersionNode = new TreeNode(VersionTreeNodeText(data.MajorVersion, data.MinorVersion));
-                    lastRuleSetNameNode.Nodes.Add(newVersionNode);
-                    ruleSetDataDictionary.Add(newVersionNode, data);
-                    lastData = data;
-                }
+
+                TreeViewItem newVersionNode = new TreeViewItem();
+                newVersionNode.Header = VersionTreeNodeText(data.MajorVersion, data.MinorVersion);
+
+                lastRuleSetNameNode.Items.Add(newVersionNode);
+                ruleSetDataDictionary.Add(newVersionNode, data);
+                lastData = data;
             }
             //treeView1.Sort();
         }
@@ -329,6 +333,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                         || duplicateData == selectedRuleSetData)
                     {
                         selectedRuleSetData.Name = txtRuleSetName.Text;
+                      
                         this.MarkDirty(selectedRuleSetData);
 
                         List<RuleSetData> ruleSetDataCollection = new List<RuleSetData>();
@@ -347,11 +352,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
 
-        private TreeNode GetTreeNodeForRuleSetData(RuleSetData data)
+        private TreeViewItem GetTreeNodeForRuleSetData(RuleSetData data)
         {
             if (data != null)
             {
-                Dictionary<TreeNode, RuleSetData>.Enumerator enumerator = ruleSetDataDictionary.GetEnumerator();
+                Dictionary<TreeViewItem, RuleSetData>.Enumerator enumerator = ruleSetDataDictionary.GetEnumerator();
                 while (enumerator.MoveNext())
                 {
                     RuleSetData otherData = enumerator.Current.Value;
@@ -377,8 +382,8 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                         selectedRuleSetData.MajorVersion = majorInt;
                         this.MarkDirty(selectedRuleSetData);
 
-                        TreeNode selectedNode = (TreeNode)TreeRuleSets.SelectedItem;
-                        selectedNode.Text = VersionTreeNodeText(selectedRuleSetData.MajorVersion, selectedRuleSetData.MinorVersion);
+                        TreeViewItem selectedNode = (TreeViewItem)TreeRuleSets.SelectedItem;
+                        selectedNode.Header = VersionTreeNodeText(selectedRuleSetData.MajorVersion, selectedRuleSetData.MinorVersion);
                         //treeView1.Sort();
                         this.SetSelectedNode(selectedNode);
                         TreeRuleSets.Items.Refresh();
@@ -410,8 +415,8 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                     selectedRuleSetData.MinorVersion = minorInt;
                     this.MarkDirty(selectedRuleSetData);
 
-                    TreeNode selectedNode = (TreeNode)TreeRuleSets.SelectedItem;
-                    selectedNode.Text = VersionTreeNodeText(selectedRuleSetData.MajorVersion, selectedRuleSetData.MinorVersion);
+                    TreeViewItem selectedNode = (TreeViewItem)TreeRuleSets.SelectedItem;
+                    selectedNode.Header = VersionTreeNodeText(selectedRuleSetData.MajorVersion, selectedRuleSetData.MinorVersion);
                     //this.treeView1.Sort();
                     this.SetSelectedNode(selectedNode);
                     TreeRuleSets.Items.Refresh();
@@ -426,8 +431,8 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
 
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
-            TreeNode selectedNode = (TreeNode)TreeRuleSets.SelectedItem;
-            TreeNode parentNode = selectedNode.Parent;
+            TreeViewItem selectedNode = (TreeViewItem)TreeRuleSets.SelectedItem;
+            TreeViewItem parentNode = selectedNode.Parent as TreeViewItem;
 
             if (IsVersionNode(selectedNode) && selectedRuleSetData != null)
             {
@@ -435,10 +440,10 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                 this.MarkDirty(selectedRuleSetData);
 
                 ruleSetDataDictionary.Remove(selectedNode);
-                parentNode.Nodes.Remove(selectedNode);
+                parentNode.Items.Remove(selectedNode);
 
                 //if this was the only version node, remove the ruleset name node
-                if (parentNode.Nodes.Count == 0)
+                if (parentNode.Items.Count == 0)
                 {
                     TreeRuleSets.Items.Remove(parentNode);
                 }
@@ -448,10 +453,10 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
 
-        private static bool IsVersionNode(TreeNode node)
+        private static bool IsVersionNode(TreeViewItem node)
         {
             if (node != null)
-                return node.Text.StartsWith("Version", StringComparison.Ordinal);
+                return node.Header.ToString().StartsWith("Version", StringComparison.Ordinal);
             else
                 return false;
         }
@@ -498,55 +503,19 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         {
             if (ruleSetDataDictionary != null)
             {
-                List<RuleSetData> dirtyRSDs = new List<RuleSetData>();
-                RuleDefinitions ruleDefinitions = null;
-                using (Stream stream = new FileStream(rulesFilePath, FileMode.Open))
-                {
-                    using (XmlTextReader reader = new XmlTextReader(stream))
-                    {
-                        WorkflowMarkupSerializer workflowMarkupSerializer = new WorkflowMarkupSerializer();
-                        ruleDefinitions = workflowMarkupSerializer.Deserialize(reader) as RuleDefinitions;
-                    }
-                }
-
-                foreach (RuleSetData data in deletedRuleSetDataCollection)
-                {
-                    string orgRuleSetName = $"{data.OriginalName}-{data.MajorVersion}-{data.MinorVersion}";
-
-                    if (!string.IsNullOrEmpty(orgRuleSetName))
-                    {
-                        if (ruleDefinitions.RuleSets.Contains(orgRuleSetName))
-                        {
-                            ruleDefinitions.RuleSets.Remove(orgRuleSetName);
-                        }
-                    }
-                }
-
-                foreach (RuleSetData data in ruleSetDataDictionary.Values)
-                {
-                    if (data.Dirty == true)
-                    {
-                        dirtyRSDs.Add(data);
-                        //data.RuleSetDefinition = this.SerializeRuleSet(data.RuleSet);
-                        string orgRuleSetName = $"{data.OriginalName}-{data.MajorVersion}-{data.MinorVersion}";
-
-                        if (!string.IsNullOrEmpty(orgRuleSetName))
-                        {
-                            if (ruleDefinitions.RuleSets.Contains(orgRuleSetName))
-                            {
-                                ruleDefinitions.RuleSets.Remove(orgRuleSetName);
-                            }
-                        }
-
-                        data.RuleSet.Name = $"{data.Name}-{data.MajorVersion}-{data.MinorVersion}";
-                        ruleDefinitions.RuleSets.Add(data.RuleSet);
-                    }
-                }
-
                 try
                 {
-                    WorkflowMarkupSerializer workflowMarkupSerializer = new WorkflowMarkupSerializer();
-                    workflowMarkupSerializer.Serialize(new XmlTextWriter(rulesFilePath, null), ruleDefinitions);
+                    WorkflowMarkupSerializer ser = new WorkflowMarkupSerializer();
+                    RuleDefinitions ruleDefs = new RuleDefinitions();
+                    foreach (var rule in ruleSetDataDictionary.Values)
+                    {
+                        rule.RuleSet.Name = $"{rule.Name}-{rule.MajorVersion}-{rule.MinorVersion}";
+                        ruleDefs.RuleSets.Add(rule.RuleSet);
+                    }
+                    using (var xmlTW = new System.Xml.XmlTextWriter(rulesFilePath, null))
+                    {
+                        ser.Serialize(xmlTW, ruleDefs);
+                    }
                 }
                 catch (UnauthorizedAccessException ex)
                 {
@@ -558,26 +527,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                     System.Windows.Forms.MessageBox.Show(string.Format(CultureInfo.InvariantCulture, $"Error saving RuleSets to {rulesFilePath}. \r\n\n", ex.Message), "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     //System.Windows.MessageBox.Show("Rules file is not writeable. Created copy of your changes in " + localFileCopy);
                 }
-
-                try
-                {
-                    foreach (RuleSetData data in dirtyRSDs)
-                    {
-                        // after updates have been stored to the DB, set/reset the "Original" values
-                        data.OriginalName = data.Name;
-                        data.OriginalMajorVersion = data.MajorVersion;
-                        data.OriginalMinorVersion = data.MinorVersion;
-                        data.Dirty = false;
-                    }
-
-                    deletedRuleSetDataCollection.Clear();
-
-                    dirty = false;
-                }
-                catch (InvalidOperationException ex)
-                {
-                    System.Windows.Forms.MessageBox.Show(string.Format(CultureInfo.InvariantCulture, "Error saving RuleSets to DB. \r\n\n", ex.Message), "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                InitializeData();
             }
             else
             {
@@ -622,20 +572,20 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            SaveToFile();
+            ContinueRuleDefinitionsChange();
         }
 
         private void InitializeData()
         {
-            if (this.ContinueRuleDefinitionsChange())
-            {
-                selectedRuleSetData = null;
-                List<RuleSetData> ruleSetDataCollection = this.GetRuleSets();
-                this.BuildTree(ruleSetDataCollection);
+            selectedRuleSetData = null;
+            List<RuleSetData> ruleSetDataCollection = this.GetRuleSets();
 
-                this.EnableApplicationFields(true);
-                this.EnableRuleSetFields(false);
-            }
+
+
+            this.BuildTree(ruleSetDataCollection);
+
+            this.EnableApplicationFields(true);
+            this.EnableRuleSetFields(false);
         }
 
         private void EnableApplicationFields(bool enable)
@@ -653,7 +603,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             List<RuleSetData> ruleSetDataCollection = new List<RuleSetData>();
             dirty = false;
 
-            using (Stream stream = new FileStream(rulesFilePath, FileMode.Open))
+            using (Stream stream = new FileStream(rulesFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 WorkflowMarkupSerializer ser = new WorkflowMarkupSerializer();
                 RuleDefinitions ruleDefinitions;
@@ -662,7 +612,6 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                     using (XmlTextReader reader = new XmlTextReader(stream))
                     {
                         ruleDefinitions = ser.Deserialize(reader) as RuleDefinitions;
-
                         foreach (var ruleset in ruleDefinitions.RuleSets)
                         {
                             RuleSetData data = new RuleSetData();
@@ -676,7 +625,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                                     data.MajorVersion = majorVersion;
                                 }
 
-                                if (int.TryParse(nameSplitted[1], out int minorVersion))
+                                if (int.TryParse(nameSplitted[2], out int minorVersion))
                                 {
                                     data.MinorVersion = minorVersion;
                                 }
@@ -693,6 +642,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                             //data.AssemblyPath = reader.GetString(5);
                             //data.ActivityName = reader.GetString(6);
                             //data.ModifiedDate = reader.GetDateTime(7);
+                            data.RuleSet = ruleset;
                             data.Dirty = false;
                             ruleSetDataCollection.Add(data);
                         }

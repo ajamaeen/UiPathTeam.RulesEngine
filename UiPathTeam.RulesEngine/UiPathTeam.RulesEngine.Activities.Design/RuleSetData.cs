@@ -46,8 +46,8 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             set
             {
                 name = value;
-                if (this.RuleSet != null)
-                    this.RuleSet.Name = name;
+               /* if (this.RuleSet != null)
+                    this.RuleSet.Name = name;*/
             }
         }
         public string OriginalName
@@ -93,7 +93,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             set
             {
                 ruleSet = value;
-                name = ruleSet.Name;
+                //name = ruleSet.Name;
             }
         }
         public short Status

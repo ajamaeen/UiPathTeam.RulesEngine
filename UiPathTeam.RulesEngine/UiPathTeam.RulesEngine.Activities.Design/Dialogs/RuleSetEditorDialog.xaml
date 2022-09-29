@@ -5,7 +5,8 @@
                            xmlns:sapv="clr-namespace:System.Activities.Presentation.View;assembly=System.Activities.Presentation"
                            xmlns:sap="clr-namespace:System.Activities.Presentation;assembly=System.Activities.Presentation"
                            xmlns:s="clr-namespace:System;assembly=mscorlib"
-                           xmlns:activity="clr-namespace:UiPathTeam.RulesEngine.Activities.Properties;assembly=UiPathTeam.RulesEngine.Activities"                           
+                           xmlns:activity="clr-namespace:UiPathTeam.RulesEngine.Activities.Properties;assembly=UiPathTeam.RulesEngine.Activities"
+                           xmlns:PF="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
                            xmlns:Forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="UiPathTeam.RulesEngine.Activities.Design.Dialogs.RuleSetEditorDialog"                           
                            Title="RuleSet Browser" WindowResizeMode="NoResize" Width="320"
                            DataContext="{Binding RelativeSource={RelativeSource Self}}" Loaded="WorkflowElementDialog_Loaded">
@@ -35,11 +36,11 @@
         <GroupBox Grid.Row="0" Header="Rule Sets" Margin="5,5,5,5" MaxHeight="200" 
                   MaxWidth="{Binding ActualWidth, ElementName=LayoutRoot}">
             <TreeView Margin="5,5,5,5" Height="160" x:Name="TreeRuleSets"
-                      ItemsSource="{Binding Items, Mode=OneTime}" SelectedItemChanged="TreeRuleSets_SelectedItemChanged" >
+                      ItemsSource="{Binding Items, Mode=TwoWay}" SelectedItemChanged="TreeRuleSets_SelectedItemChanged" >
                 <TreeView.Resources>
-                    <HierarchicalDataTemplate  DataType="{x:Type Forms:TreeNode}"
-                                    ItemsSource="{Binding Nodes, Mode=OneTime}">
-                        <TextBlock Text="{Binding Text}" />
+                    <HierarchicalDataTemplate DataType="{x:Type PF:TreeViewItem}"
+                                    ItemsSource="{Binding Nodes, Mode=TwoWay}">
+                        <TextBlock Text="{Binding Text, Mode=TwoWay}" />
                     </HierarchicalDataTemplate>
                 </TreeView.Resources>
             </TreeView>
