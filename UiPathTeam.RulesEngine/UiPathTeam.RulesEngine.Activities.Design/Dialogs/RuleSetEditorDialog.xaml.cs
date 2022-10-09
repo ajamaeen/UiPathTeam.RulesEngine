@@ -28,7 +28,6 @@ using UiPath.Shared.Activities.Design.Services;
 
 namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
 {
-    // Interaction logic for RuleSetEditorDialog.xaml
     public partial class RuleSetEditorDialog : WorkflowElementDialog
     {
         private Dictionary<TreeViewItem, RuleSetData> ruleSetDataDictionary = new Dictionary<TreeViewItem, RuleSetData>();
@@ -39,14 +38,16 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         private readonly int maxMinorVersions = 100;
         private readonly int maxMajorVersions = 1000;
         private readonly WorkflowMarkupSerializer serializer = new WorkflowMarkupSerializer();
-
+        private static readonly Regex _regex = new Regex("[^0-9.-]+"); //regex that matches disallowed text
+        
         public RuleSetEditorDialog(ModelItem modelItem)
         {
             InitializeComponent();
             ModelItem = modelItem;
             Context = modelItem.GetEditingContext();
-            rulesFilePath = ModelItem.GetInArgumentValue<string>("RulesFilePath");
+            rulesFilePath = ModelItem.GetInArgumentValue<string>("RulesFilePath");            
             InitializeData();
+            EnableOk(false);
         }
 
         public RuleSetEditorDialog(string rulesFilePath)
@@ -172,24 +173,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                 }
             }
             return null;
-        }
-
-        //private TreeViewItem FindParentNode(RuleSetData data)
-        //{
-        //    if (data != null)
-        //    {
-        //        foreach (TreeViewItem node in TreeRuleSets.Items)
-        //        {
-        //            var treeHead = (TreeNode)node.Header;
-        //            if (treeHead != null)
-        //            {
-        //                if (String.CompareOrdinal(treeHead.Text, data.Name) == 0)
-        //                    return node;
-        //            }
-        //        }
-        //    }
-        //    return null;
-        //}
+        }               
 
         private RuleSetData CreateRuleSetData(RuleSet ruleSet)
         {
@@ -465,39 +449,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         private void WorkflowElementDialog_Loaded(object sender, RoutedEventArgs e)
         {
             txtMajorVersion.MaxLength = maxMajorVersions;
-            txtMinorVersion.MaxLength = maxMinorVersions;
-            //TreeRuleSets.TreeViewNodeSorter = new TreeSortClass() as IComparer;
-            //treeView1.HideSelection = false;
-        }
-
-        private bool ContinueRuleDefinitionsChange()
-        {
-            bool continueResult = true;
-
-            if (dirty)
-            {
-                DialogResult result = System.Windows.Forms.MessageBox.Show(string.Format(CultureInfo.InvariantCulture, "Do you want to save the changes?"),
-                    "RuleSet Editor", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation);
-                if (result == DialogResult.Yes)
-                {
-                    SaveToFile();
-                }
-                else if (result == DialogResult.No)
-                {
-                }
-                else //Cancel
-                {
-                    continueResult = false;
-                }
-            }
-            return continueResult;
-        }
-
-        protected override void OnWorkflowElementDialogClosed(bool? dialogResult)
-        {
-            //ContinueRuleDefinitionsChange()
-            //Update parent controls
-            base.OnWorkflowElementDialogClosed(dialogResult);
+            txtMinorVersion.MaxLength = maxMinorVersions;           
         }
 
         private void SaveToFile()
@@ -571,20 +523,20 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             return ruleDefinition.ToString();
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
-        {
-            ContinueRuleDefinitionsChange();
+        protected override void OnWorkflowElementDialogClosed(bool? dialogResult)
+        {            
+            if(dialogResult!=null && dialogResult.GetValueOrDefault() == true)
+            {
+                SaveToFile();
+            }
+            base.OnWorkflowElementDialogClosed(dialogResult);
         }
 
         private void InitializeData()
         {
             selectedRuleSetData = null;
             List<RuleSetData> ruleSetDataCollection = this.GetRuleSets();
-
-
-
             this.BuildTree(ruleSetDataCollection);
-
             this.EnableApplicationFields(true);
             this.EnableRuleSetFields(false);
         }
@@ -603,6 +555,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         {
             List<RuleSetData> ruleSetDataCollection = new List<RuleSetData>();
             dirty = false;
+
+            if(string.IsNullOrWhiteSpace(rulesFilePath))
+            {
+                return ruleSetDataCollection;
+            }
 
             using (Stream stream = new FileStream(rulesFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -661,10 +618,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
             return ruleSetDataCollection;
         }
-
-
-
-        private static readonly Regex _regex = new Regex("[^0-9.-]+"); //regex that matches disallowed text
+            
         private static bool IsTextAllowed(string text)
         {
             return !_regex.IsMatch(text);
@@ -679,7 +633,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         {
             e.Handled = !IsTextAllowed(e.Text);
         }
-        // Use the DataObject.Pasting Handler 
+        
         private void TextBoxPasting(object sender, DataObjectPastingEventArgs e)
         {
             if (e.DataObject.GetDataPresent(typeof(String)))
@@ -696,5 +650,22 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
 
+        public IReadOnlyCollection<RuleSet> RuleSets
+        {
+            get
+            {
+                var ruleSetDataCollection = new List<RuleSetData>();
+
+                foreach (var rule in ruleSetDataDictionary.Values)
+                {                    
+                    if(!rule.Dirty)
+                    {
+                        ruleSetDataCollection.Add(rule);
+                    }
+                }
+
+                return (IReadOnlyCollection<RuleSet>)ruleSetDataCollection;
+            }
+        }
     }
 }

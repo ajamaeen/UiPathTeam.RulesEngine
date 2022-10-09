@@ -14,7 +14,7 @@ namespace UiPathTeam.RulesEngine.Test
         static void Main(string[] args)
         {
             //var policy = new RulesPolicyDesigner();            
-            var ruleSetEditorDialog = new Activities.Design.Dialogs.RuleSetEditorDialog(@"D:\Code\temp\UiPathTeam.RulesEngine.Samples\Rules\Insights-DE.rules");
+            var ruleSetEditorDialog = new Activities.Design.Dialogs.RuleSetEditorDialog(@"D:\Community\UiPathTeam.RulesEngine.Samples\Rules\Insights-DE.rules");
             ruleSetEditorDialog.Show();
         }
     }

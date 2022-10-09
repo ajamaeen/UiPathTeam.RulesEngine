@@ -5,8 +5,10 @@ namespace UiPathTeam.RulesEngine.Activities.Design
     using System.Activities.Presentation;
     using System.Activities.Presentation.Model;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Windows;
     using System.Windows.Forms;
     using System.Workflow.Activities.Rules;
@@ -17,8 +19,6 @@ namespace UiPathTeam.RulesEngine.Activities.Design
     using UiPath.Shared.Activities.Design.Services;
     using UiPathTeam.RulesEngine.Activities.Design;
     using UiPathTeam.RulesEngine.Activities.Design.Dialogs;
-    using UiPathTeam.RulesEngine.RuleEditors;
-    using MessageBox = System.Windows.MessageBox;
 
     /// <summary>
     /// Interaction logic for RulesPolicyDesigner.xaml
@@ -32,9 +32,14 @@ namespace UiPathTeam.RulesEngine.Activities.Design
         public RulesPolicyDesigner()
         {
             InitializeComponent();
+
+            if (IsLoaded)
+            {
+                System.Windows.Forms.MessageBox.Show(ModelItem == null ? "Null:" : "Not Null", "RuleSet Property Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
-        public void EditRuleSets_Click(object sender, RoutedEventArgs e)
+        public void btnEditRuleSets_Click(object sender, RoutedEventArgs e)
         {
             string rulesFilePath = ModelItem.GetInArgumentValue<string>(ruleFilePathProperty);
 
@@ -46,43 +51,10 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             }
 
             RuleSetEditorDialog ruleSetEditorDialog = new RuleSetEditorDialog(ModelItem);
-            ruleSetEditorDialog.Show();
-
-            ////object targetObject = ModelItem.GetInArgumentValue<object>(targetObjectProperty);
-            ////if (targetObject == null)
-            ////{
-            ////    System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
-            ////    return;
-            ////}
-
-            //ModelItem targetObjectModelItem = ModelItem.Properties["TargetObject"].Value;
-            //if (targetObjectModelItem == null || targetObjectModelItem.GetCurrentValue() == null)
-            //{
-            //    System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
-            //    return;
-            //}
-
-            ////// verify that target object is correctly configured
-            //InArgument targetObjArg = targetObjectModelItem.GetCurrentValue() as InArgument;
-            //if (targetObjArg == null)
-            //{
-            //    System.Windows.MessageBox.Show("Invalid target object");
-            //    return;
-            //}
-
-            //Type targetObjectType = targetObjArg.ArgumentType;
-            //string ruleSetName = ModelItem.GetInArgumentValue<string>(ruleSetNameProperty);
-
-            //CreateEmptyFileIfNotExists(rulesFilePath,ruleSetName);
-
-            //// popup the dialog for viewing the rules
-            //var ruleSetDialog = new RuleSetToolkitEditor();
-            //ruleSetDialog.LoadFile(rulesFilePath, targetObjectType);
-            //var result = ruleSetDialog.ShowDialog();
-            //if (result == DialogResult.OK) //If OK was pressed
-            //{
-            //    //TODO:Refresh Activity
-            //}
+            if (ruleSetEditorDialog.ShowOkCancel())
+            {
+                LoadRuleSets(rulesFilePath);
+            }
         }
 
         private void CreateEmptyFileIfNotExists(string filePath, string ruleSetName)
@@ -115,7 +87,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             }
         }
 
-        public void EditRules_Click(object sender, RoutedEventArgs e)
+        public void btnEditRules_Click(object sender, RoutedEventArgs e)
         {
             string rulesFilePath = ModelItem.GetInArgumentValue<string>(ruleFilePathProperty);
 
@@ -131,13 +103,6 @@ namespace UiPathTeam.RulesEngine.Activities.Design
                 System.Windows.MessageBox.Show("RuleSet Name needs to be configured before viewing or editing the rules");
                 return;
             }
-
-            //var targetObject = ModelItem.GetInArgumentValue<object>(targetObjectProperty);
-            //if (targetObject == null)
-            //{
-            //    System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
-            //    return;
-            //}
 
             ModelItem targetObjectModelItem = ModelItem.Properties["TargetObject"].Value;
             if (targetObjectModelItem == null || targetObjectModelItem.GetCurrentValue() == null)
@@ -241,16 +206,16 @@ namespace UiPathTeam.RulesEngine.Activities.Design
                 }
                 else
                 {
-                    //TODO: Reload rule sets
+                    LoadRuleSets(args.Path);
                 }
             }
         }
 
-        private void RuleSetNameList_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+        private void cbRuleSetNames_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (RuleSetNameList.SelectedValue != null)
+            if (cbRuleSetNames.SelectedValue != null)
             {
-                ModelItem.Properties[ruleSetNameProperty].SetValue(new InArgument<string>(RuleSetNameList.SelectedValue.ToString()));
+                ModelItem.Properties[ruleSetNameProperty].SetValue(new InArgument<string>(cbRuleSetNames.SelectedValue.ToString()));
             }
             else
             {
@@ -278,6 +243,75 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             ruleSetDialog.Controls["rulesGroupBox"].Controls["panel1"].Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
             ruleSetDialog.Controls["rulesGroupBox"].Controls["panel1"].Controls["chainingBehaviourComboBox"].Anchor = AnchorStyles.Top | AnchorStyles.Right;
             ruleSetDialog.Controls["rulesGroupBox"].Controls["panel1"].Controls["chainingLabel"].Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        }
+
+        private void LoadRuleSets(string filePath)
+        {
+            var ruelSets = new List<RuleSetSummary>();
+
+            if (!string.IsNullOrWhiteSpace(filePath))
+            {
+                using (Stream stream = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                {
+                    WorkflowMarkupSerializer ser = new WorkflowMarkupSerializer();
+                    RuleDefinitions ruleDefinitions;
+                    try
+                    {
+                        using (XmlTextReader reader = new XmlTextReader(stream))
+                        {
+                            ruleDefinitions = ser.Deserialize(reader) as RuleDefinitions;
+                            foreach (var ruleset in ruleDefinitions.RuleSets)
+                            {
+                                RuleSetSummary ruleSetSummary = new RuleSetSummary();
+                                ruleSetSummary.Name = ruleset.Name;
+
+                                string[] nameSplitted = ruleset.Name.Split('-');
+                                if (nameSplitted.Length == 3)
+                                {
+                                    if (int.TryParse(nameSplitted[1], out int majorVersion))
+                                    {
+                                        ruleSetSummary.MajorVersion = majorVersion;
+                                    }
+
+                                    if (int.TryParse(nameSplitted[2], out int minorVersion))
+                                    {
+                                        ruleSetSummary.MinorVersion = minorVersion;
+                                    }
+
+                                    ruleSetSummary.DisplayName = $"{nameSplitted[0]} - v{ ruleSetSummary.MajorVersion}.{ruleSetSummary.MinorVersion}";
+                                }
+                                else
+                                {
+                                    ruleSetSummary.Name = ruleset.Name;
+                                }
+
+                                if (string.IsNullOrWhiteSpace(ruleSetSummary.DisplayName))
+                                {
+                                    ruleSetSummary.DisplayName = ruleSetSummary.Name;
+                                }
+
+                                ruelSets.Add(ruleSetSummary);
+                            }
+                        }
+                    }
+                    catch (InvalidCastException)
+                    {
+                        System.Windows.Forms.MessageBox.Show("Error parsing table row.", "RuleSet Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    finally
+                    {
+                        if (stream != null)
+                            stream.Dispose();
+                    }
+                }
+                cbRuleSetNames.ItemsSource = ruelSets;
+
+                //To save selected value when user close then re-open the activity
+                if (!string.IsNullOrWhiteSpace(ModelItem.GetInArgumentValue<string>(ruleSetNameProperty)))
+                {
+                    cbRuleSetNames.SelectedValue = ModelItem.GetInArgumentValue<string>(ruleSetNameProperty);
+                }
+            }
         }
     }
 }

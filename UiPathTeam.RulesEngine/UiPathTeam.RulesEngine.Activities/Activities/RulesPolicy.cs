@@ -87,7 +87,6 @@ namespace UiPathTeam.RulesEngine.Activities
 
         #endregion
 
-
         #region Protected Methods
 
         protected override void CacheMetadata(CodeActivityMetadata metadata)

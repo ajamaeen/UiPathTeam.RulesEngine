@@ -8,7 +8,7 @@
                            xmlns:activity="clr-namespace:UiPathTeam.RulesEngine.Activities.Properties;assembly=UiPathTeam.RulesEngine.Activities"
                            xmlns:PF="clr-namespace:System.Windows.Controls;assembly=PresentationFramework"
                            xmlns:Forms="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="UiPathTeam.RulesEngine.Activities.Design.Dialogs.RuleSetEditorDialog"                           
-                           Title="RuleSet Browser" WindowResizeMode="NoResize" Width="320"
+                           Title="RuleSet Browser" WindowResizeMode="NoResize" Width="320"                            
                            DataContext="{Binding RelativeSource={RelativeSource Self}}" Loaded="WorkflowElementDialog_Loaded">
 
 
@@ -48,9 +48,8 @@
 
         <StackPanel Grid.Row="1"   Margin="10,5,5,5" Visibility="{Binding ActualHeight, ElementName=contentControl}"  Orientation="Horizontal" >
             <ContentControl x:Name="contentControl"/>
-            <Button Content="New" Width="95" Margin="5" HorizontalAlignment="Left" x:Name="btnNew" Click="New_Click" />
-            <Button Content="Delete" Width="95" Margin="5" HorizontalAlignment="Left" x:Name="btnDelete" Click="Delete_Click" />
-            <Button Content="Save" Width="90" Margin="5" HorizontalAlignment="Left" x:Name="btnSave" Click="Save_Click" />
+            <Button Content="New" Width="140" Margin="5" HorizontalAlignment="Left" x:Name="btnNew" Click="New_Click" />
+            <Button Content="Delete" Width="140" Margin="5" HorizontalAlignment="Left" x:Name="btnDelete" Click="Delete_Click" />            
         </StackPanel>
 
         <StackPanel Grid.Row="2"   Margin="10,5,5,5" Visibility="{Binding ActualHeight, ElementName=contentControl}"

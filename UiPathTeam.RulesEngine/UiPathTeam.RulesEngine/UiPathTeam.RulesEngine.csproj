@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net461</TargetFrameworks>
 		<RootNamespace>UiPathTeam.RulesEngine</RootNamespace>
-		<AssemblyName>UiPathTeam.RulesEngine</AssemblyName>
+		<AssemblyName>UiPathTeam.RulesEngine</AssemblyName>    
   </PropertyGroup>
   <PropertyGroup>
     <OutputPath>bin\$(Configuration)\</OutputPath>

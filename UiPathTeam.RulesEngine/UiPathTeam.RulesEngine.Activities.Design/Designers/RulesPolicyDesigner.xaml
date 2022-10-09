@@ -54,9 +54,13 @@
                                   Width="200"
                                   HorizontalAlignment="Left" CheckFileExists="False" />
 
-            <ComboBox  Grid.Row="1" 
-                       Grid.Column="1"  Margin="5,5,5,5" Padding="0,0,0,0"  Name="RuleSetNameList"                                               
-                       SelectionChanged="RuleSetNameList_SelectionChanged"/>
+            <ComboBox  Grid.Row="1"     
+                        Margin="5, 5"
+                       Grid.Column="1"   x:Name="cbRuleSetNames"                             
+                       DisplayMemberPath="DisplayName"
+                       SelectedValuePath="Name"                                 
+                       SelectionChanged="cbRuleSetNames_SelectionChanged">                
+            </ComboBox>
 
             <sapv:ExpressionTextBox 
             Expression="{Binding Path=ModelItem.TargetObject, Mode=TwoWay, Converter={StaticResource ArgumentToExpressionConverter}, ConverterParameter=In}" 
@@ -73,13 +77,13 @@
             MaxLines="1"
             Grid.Row="3" Grid.Column="1" Margin="5, 5" />
 
-            <Button Content="Edit RuleSets" Name="editRuleSets" Click="EditRuleSets_Click"
+            <Button Content="Edit RuleSets" Name="btnEditRuleSets" Click="btnEditRuleSets_Click"
                     Width="100"
                     Height="25"      
                     HorizontalAlignment="Left"
                     Grid.Row="4" Grid.Column="1" Margin="5, 5"/>
 
-            <Button Content="Edit Rules" Name="EditRules" Click="EditRules_Click"
+            <Button Content="Edit Rules" Name="btnEditRules" Click="btnEditRules_Click"
                     Width="100"
                     Height="25"      
                     HorizontalAlignment="Right"
