@@ -32,10 +32,14 @@ namespace UiPathTeam.RulesEngine.Activities.Design
         public RulesPolicyDesigner()
         {
             InitializeComponent();
+            this.Loaded += RulesPolicyDesigner_Loaded;
+        }
 
-            if (IsLoaded)
+        private void RulesPolicyDesigner_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrWhiteSpace(ModelItem.GetInArgumentValue<string>(ruleFilePathProperty)))
             {
-                System.Windows.Forms.MessageBox.Show(ModelItem == null ? "Null:" : "Not Null", "RuleSet Property Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                LoadRuleSets(ModelItem.GetInArgumentValue<string>(ruleFilePathProperty));
             }
         }
 

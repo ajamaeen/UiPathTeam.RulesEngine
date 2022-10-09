@@ -91,10 +91,10 @@ namespace UiPathTeam.RulesEngine.Activities
 
         protected override void CacheMetadata(CodeActivityMetadata metadata)
         {
+            base.CacheMetadata(metadata);
             if (RulesFilePath == null) metadata.AddValidationError(string.Format(Resources.ValidationValue_Error, nameof(RulesFilePath)));
             if (RuleSetName == null) metadata.AddValidationError(string.Format(Resources.ValidationValue_Error, nameof(RuleSetName)));
-            if (TargetObject == null) metadata.AddValidationError(string.Format(Resources.ValidationValue_Error, nameof(TargetObject)));
-            base.CacheMetadata(metadata);
+            if (TargetObject == null) metadata.AddValidationError(string.Format(Resources.ValidationValue_Error, nameof(TargetObject)));            
         }
 
         protected override async Task<Action<AsyncCodeActivityContext>> ExecuteAsync(AsyncCodeActivityContext context, CancellationToken cancellationToken)
