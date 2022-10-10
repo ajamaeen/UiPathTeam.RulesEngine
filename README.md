@@ -18,3 +18,6 @@ High-level rule authoring tools
 A graphics-based user interface
 A rules repository with version control and rollback capabilities
 Rule-testing and simulation functions; and ogs and records of decisions made over time
+
+<b>Solution Architecture:</b>
+![image](https://user-images.githubusercontent.com/11008302/194887211-5fd5b9c2-b211-4fd2-8646-b4b81f7fba8d.png)
