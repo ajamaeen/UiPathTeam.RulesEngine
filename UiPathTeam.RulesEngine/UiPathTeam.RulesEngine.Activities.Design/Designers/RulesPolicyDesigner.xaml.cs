@@ -28,7 +28,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design
         private readonly string ruleSetNameProperty = "RuleSetName";
         private readonly string ruleFilePathProperty = "RulesFilePath";
         private readonly string targetObjectProperty = "TargetObject";
-
+        
         public RulesPolicyDesigner()
         {
             InitializeComponent();
@@ -217,9 +217,10 @@ namespace UiPathTeam.RulesEngine.Activities.Design
 
         private void cbRuleSetNames_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
-            if (cbRuleSetNames.SelectedValue != null)
+            if (cbRuleSetNames.SelectedItem != null)
             {
-                ModelItem.Properties[ruleSetNameProperty].SetValue(new InArgument<string>(cbRuleSetNames.SelectedValue.ToString()));
+                var selectedItem = (RuleSetSummary)cbRuleSetNames.SelectedItem;
+                ModelItem.Properties[ruleSetNameProperty].SetValue(new InArgument<string>(selectedItem.Name));
             }
             else
             {

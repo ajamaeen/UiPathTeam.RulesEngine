@@ -55,8 +55,8 @@
                                   HorizontalAlignment="Left" CheckFileExists="False" />
 
             <ComboBox  Grid.Row="1"     
-                        Margin="5, 5"
-                       Grid.Column="1"   x:Name="cbRuleSetNames"                             
+                       Margin="5, 5"
+                       Grid.Column="1" x:Name="cbRuleSetNames"                             
                        DisplayMemberPath="DisplayName"
                        SelectedValuePath="Name"                                 
                        SelectionChanged="cbRuleSetNames_SelectionChanged">                
