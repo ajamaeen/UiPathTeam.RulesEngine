@@ -81,6 +81,9 @@ namespace UiPathTeam.RulesEngine.Activities
 
         #region Constructors
 
+        /// <summary>
+        /// Default Constructor
+        /// </summary>
         public RulesPolicy()
         {
         }

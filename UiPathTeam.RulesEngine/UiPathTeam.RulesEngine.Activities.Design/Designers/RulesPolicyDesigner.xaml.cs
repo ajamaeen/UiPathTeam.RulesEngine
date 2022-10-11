@@ -43,6 +43,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             }
         }
 
+        /// <summary>
+        /// Edit Rule Set Click Handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void btnEditRuleSets_Click(object sender, RoutedEventArgs e)
         {
             string rulesFilePath = ModelItem.GetInArgumentValue<string>(ruleFilePathProperty);
@@ -61,6 +66,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             }
         }
 
+        /// <summary>
+        /// Check if the file exists. If not, it will create a new file with an empty rule set with the provided name
+        /// </summary>
+        /// <param name="filePath">Rules File Path </param>
+        /// <param name="ruleSetName">Rule Set Name to be used when creating a empty file in case the file is not exist</param>
         private void CreateEmptyFileIfNotExists(string filePath, string ruleSetName)
         {
             if (!File.Exists(filePath))
@@ -91,6 +101,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             }
         }
 
+        /// <summary>
+        /// Edit rule Click Handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void btnEditRules_Click(object sender, RoutedEventArgs e)
         {
             string rulesFilePath = ModelItem.GetInArgumentValue<string>(ruleFilePathProperty);
@@ -193,6 +208,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             }
         }
 
+        /// <summary>
+        /// Rules file path Changed Handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void filePathControl_FileSelected(object sender, RoutedEventArgs e)
         {
             var args = (FileSelectedRoutedEventArgs)e;
@@ -215,6 +235,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             }
         }
 
+        /// <summary>
+        /// Selected Rule Set changed Handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cbRuleSetNames_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             if (cbRuleSetNames.SelectedItem != null)
@@ -228,28 +253,10 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             }
         }
 
-        private void TweakRuleSetDialogToResizable(RuleSetDialog ruleSetDialog)
-        {
-            ruleSetDialog.FormBorderStyle = FormBorderStyle.Sizable;
-            ruleSetDialog.HelpButton = false;
-            ruleSetDialog.MaximizeBox = true;
-            ruleSetDialog.Controls["okCancelTableLayoutPanel"].Anchor = AnchorStyles.Right | AnchorStyles.Bottom;
-            ruleSetDialog.Controls["rulesGroupBox"].Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
-            ruleSetDialog.Controls["ruleGroupBox"].Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Bottom;
-            ruleSetDialog.Controls["ruleGroupBox"].Controls["thenTextBox"].Anchor = AnchorStyles.Left |
-                                                                                    AnchorStyles.Top |
-                                                                                    AnchorStyles.Right | AnchorStyles.Bottom;
-            ruleSetDialog.Controls["ruleGroupBox"].Controls["elseLabel"].Anchor = AnchorStyles.Left | AnchorStyles.Bottom;
-            ruleSetDialog.Controls["ruleGroupBox"].Controls["elseTextBox"].Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
-            ruleSetDialog.Controls["ruleGroupBox"].Controls["conditionTextBox"].Anchor = AnchorStyles.Left |
-                                                                                         AnchorStyles.Top |
-                                                                                         AnchorStyles.Right;
-
-            ruleSetDialog.Controls["rulesGroupBox"].Controls["panel1"].Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Right;
-            ruleSetDialog.Controls["rulesGroupBox"].Controls["panel1"].Controls["chainingBehaviourComboBox"].Anchor = AnchorStyles.Top | AnchorStyles.Right;
-            ruleSetDialog.Controls["rulesGroupBox"].Controls["panel1"].Controls["chainingLabel"].Anchor = AnchorStyles.Top | AnchorStyles.Right;
-        }
-
+        /// <summary>
+        /// Load the RuleSets from the provided rules file path
+        /// </summary>
+        /// <param name="filePath">Rules file path</param>
         private void LoadRuleSets(string filePath)
         {
             var ruelSets = new List<RuleSetSummary>();

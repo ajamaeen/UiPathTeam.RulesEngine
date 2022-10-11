@@ -11,6 +11,9 @@ using System.Xml;
 
 namespace UiPathTeam.RulesEngine.Activities.Design
 {
+    /// <summary>
+    /// Class to wrap System.Workflow.Activities.Rules.RuleSet and its original name and version 
+    /// </summary>
     public class RuleSetData : IComparable<RuleSetData>
     {
         #region Variables and constructor 
@@ -137,6 +140,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design
 
         #region Methods
 
+        /// <summary>
+        /// Deserialize RuleSet from XML to System.Workflow.Activities.Rules.RuleSet
+        /// </summary>
+        /// <param name="ruleSetXmlDefinition"> RuleSet XML serialized string</param>
+        /// <returns></returns>
         private RuleSet DeserializeRuleSet(string ruleSetXmlDefinition)
         {
             if (!String.IsNullOrEmpty(ruleSetXmlDefinition))
@@ -151,11 +159,19 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             }
         }
 
+        /// <summary>
+        /// return RuleSet [Name - MajorVersion.MinorVersion]
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Format(CultureInfo.InvariantCulture, "{0} - {1}.{2}", name, majorVersion, minorVersion);
         }
 
+        /// <summary>
+        /// Deep Clone the current instance
+        /// </summary>
+        /// <returns></returns>
         public RuleSetData Clone()
         {
             RuleSetData newData = new RuleSetData();
@@ -172,15 +188,15 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             return newData;
         }
 
-        public RuleSetInfo GetRuleSetInfo()
-        {
-            return new RuleSetInfo(name, majorVersion, minorVersion);
-        }
-
         #endregion
 
         #region IComparable<RuleSetData> Members
 
+        /// <summary>
+        /// Compares current instance with the provided RuleSetData object using (In order) the name, Major version and Minor version. 
+        /// </summary>
+        /// <param name="other"> The second RuleSetData to compare.</param>
+        /// <returns></returns>
         public int CompareTo(RuleSetData other)
         {
             if (other != null)

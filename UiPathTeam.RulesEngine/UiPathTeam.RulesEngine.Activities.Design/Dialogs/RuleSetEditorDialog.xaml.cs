@@ -30,88 +30,65 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
 {
     public partial class RuleSetEditorDialog : WorkflowElementDialog
     {
+
+        #region Properties
         private Dictionary<TreeViewItem, RuleSetData> ruleSetDataDictionary = new Dictionary<TreeViewItem, RuleSetData>();
-        private bool dirty; //indicates if any RuleSetData has been modified
         private readonly string rulesFilePath;
         private RuleSetData selectedRuleSetData;
         private List<RuleSetData> deletedRuleSetDataCollection = new List<RuleSetData>();
         private readonly int maxMinorVersions = 100;
         private readonly int maxMajorVersions = 1000;
         private readonly WorkflowMarkupSerializer serializer = new WorkflowMarkupSerializer();
-        private static readonly Regex _regex = new Regex("[^0-9.-]+"); //regex that matches disallowed text
-        
+        private static readonly Regex _regex = new Regex("[^0-9.-]+"); //regex that matches disallowed text (Only number)
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Constructor with activity model item information , the model should have In Argument with name [RulesFilePath]
+        /// </summary>
+        /// <param name="modelItem">Owner Activity Model Item , this model should have In Argument with name [RulesFilePath]</param>
         public RuleSetEditorDialog(ModelItem modelItem)
         {
             InitializeComponent();
             ModelItem = modelItem;
             Context = modelItem.GetEditingContext();
-            rulesFilePath = ModelItem.GetInArgumentValue<string>("RulesFilePath");            
+            rulesFilePath = ModelItem.GetInArgumentValue<string>("RulesFilePath");
             InitializeData();
             EnableOk(false);
         }
+        #endregion
 
-        public RuleSetEditorDialog(string rulesFilePath)
-        {
-            InitializeComponent();
-            this.rulesFilePath = rulesFilePath;
-            InitializeData();
-        }
-
+        /// <summary>
+        /// Add new rule set button click handler 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void New_Click(object sender, RoutedEventArgs e)
         {
             RuleSetData newData = this.CreateRuleSetData(null);
-            this.AddRuleSetData(newData);
-        }
+            TreeViewItem parentNode = this.FindParentNode(newData);
 
-        private void AddRuleSetData(RuleSetData ruleSetData)
-        {
-            if (ruleSetData != null)
+            if (parentNode == null)
             {
-                TreeViewItem parentNode = this.FindParentNode(ruleSetData);
+                parentNode = new TreeViewItem();
+                parentNode.Header = newData.Name;
 
-                if (parentNode == null)
-                {
-                    parentNode = new TreeViewItem();
-                    parentNode.Header = ruleSetData.Name;
-
-                }
-
-                TreeViewItem newVersionNode = new TreeViewItem();
-                newVersionNode.Header = VersionTreeNodeText(ruleSetData.MajorVersion, ruleSetData.MinorVersion);
-
-                parentNode.Items.Add(newVersionNode);                
-                //treeView1.Sort();                
-                TreeRuleSets.Items.Add(parentNode);
-                ruleSetDataDictionary.Add(newVersionNode, ruleSetData);
-                //TreeRuleSets.Items.Clear();
-                //TreeRuleSets.ItemsSource = ruleSetDataDictionary;
-
-                this.SetSelectedNode(newVersionNode);
             }
+            
+            TreeViewItem newVersionNode = new TreeViewItem();
+            newVersionNode.Header = VersionTreeNodeText(newData.MajorVersion, newData.MinorVersion);
 
-            //if (ruleSetData != null)
-            //{
-            //    TreeViewItem parentTreeViewNode = this.FindParentNode(ruleSetData);
-
-            //    if (parentTreeViewNode == null)
-            //    {
-            //        parentTreeViewNode = new TreeViewItem();
-            //        parentTreeViewNode.Header = new TreeNode(ruleSetData.Name);
-            //        TreeRuleSets.Items.Add(parentTreeViewNode);
-            //    }
-
-            //    TreeNode newVersionNode = new TreeNode(VersionTreeNodeText(ruleSetData.MajorVersion, ruleSetData.MinorVersion));
-            //    var treeNode = (TreeNode)parentTreeViewNode.Header;
-            //    treeNode.Nodes.Add(newVersionNode);
-
-            //    //treeView1.Sort();
-            //    ruleSetDataDictionary.Add(newVersionNode, ruleSetData);
-            //    this.SetSelectedNode(newVersionNode);
-            //    parentTreeViewNode.IsSelected = true;
-            //    parentTreeViewNode.IsExpanded = true;
-            //}
+            parentNode.Items.Add(newVersionNode);
+            TreeRuleSets.Items.Add(parentNode);
+            ruleSetDataDictionary.Add(newVersionNode, newData);
+            this.SetSelectedNode(newVersionNode);
         }
 
+
+        /// <summary>
+        /// Change  the Selected node from the treeview to the provided node
+        /// </summary>
+        /// <param name="node">the node to be selected</param>
         private void SetSelectedNode(TreeViewItem node)
         {
             if (node != null && node.Parent != null)
@@ -131,28 +108,33 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
 
+        /// <summary>
+        /// Get The version string 
+        /// </summary>
+        /// <param name="majorVersion"></param>
+        /// <param name="minorVersion"></param>
+        /// <returns></returns>
         private static string VersionTreeNodeText(int majorVersion, int minorVersion)
         {
             return String.Format(CultureInfo.InvariantCulture, "Version {0}.{1}", majorVersion, minorVersion);
         }
 
+        /// <summary>
+        /// change the UI controls enable status depend on the provided flag
+        /// </summary>
+        /// <param name="enable">Enable flag</param>
         private void EnableRuleSetFields(bool enable)
         {
-            //editButton.Enabled = enable;
-            //deleteButton.Enabled = enable;
-            //copyButton.Enabled = enable;
             txtRuleSetName.IsEnabled = lblRuleSetName.IsEnabled = enable;
             txtMajorVersion.IsEnabled = lblMajorVersion.IsEnabled = enable;
             txtMinorVersion.IsEnabled = lblMinroVersion.IsEnabled = enable;
-            //getActivityButton.Enabled = enable;
-            //selectedActivityLabel.Enabled = enable;
-            //membersLabel.Enabled = enable;
-            //validateToolStripMenuItem.Enabled = enable;
-
             if (!enable)
                 this.ClearRuleSetFields();
         }
 
+        /// <summary>
+        /// Reset RuleSet UI control to default value
+        /// </summary>
         private void ClearRuleSetFields()
         {
             txtRuleSetName.Text = "";
@@ -162,6 +144,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             //membersBox.Items.Clear();
         }
 
+        /// <summary>
+        /// Find the TreeViewItem represent the provide RuleSet
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         private TreeViewItem FindParentNode(RuleSetData data)
         {
             if (data != null)
@@ -175,6 +162,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             return null;
         }               
 
+        /// <summary>
+        /// Create RuleSetData Object from the provided RuleSet object
+        /// </summary>
+        /// <param name="ruleSet">The source RuleSet Object</param>
+        /// <returns></returns>
         private RuleSetData CreateRuleSetData(RuleSet ruleSet)
         {
             RuleSetData data = new RuleSetData();
@@ -189,10 +181,12 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                 data.RuleSet = new RuleSet(data.Name);
             }
             data.MajorVersion = 1;
-            this.MarkDirty(data);
             return data;
         }
-
+        /// <summary>
+        /// Create Default RuleSet Name 
+        /// </summary>
+        /// <returns></returns>
         private string GenerateRuleSetName()
         {
             string namePrefix = "RuleSet";
@@ -211,6 +205,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             return newName;
         }
 
+        /// <summary>
+        /// Return true if the provided ruleset name is found within the current rulesets collection, otherwise it will return false.
+        /// </summary>
+        /// <param name="name">the ruleset name to serach for</param>
+        /// <returns>true if ruleset with this name is found else false.</returns>
         private bool IsDuplicateRuleSetName(string name)
         {
             foreach (RuleSetData data in ruleSetDataDictionary.Values)
@@ -223,14 +222,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             return false;
         }
 
-        private void MarkDirty(RuleSetData data)
-        {
-            if (data != null)
-                data.Dirty = true;
-
-            dirty = true;
-        }
-
+        /// <summary>
+        /// TreeView Selected Item changed handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TreeRuleSets_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             RuleSetData data;
@@ -258,6 +254,14 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
 
+        /// <summary>
+        ///  Return true if the provided ruleset name,major version and minor version is found within the current rulesets collection, otherwise it will return false.
+        /// </summary>
+        /// <param name="name">RuleSet Name</param>
+        /// <param name="majorVersion">Major Version</param>
+        /// <param name="minorVersion">Minor Version</param>
+        /// <param name="duplicateRuleSetData">RuleSet Object if found</param>
+        /// <returns></returns>
         private bool IsDuplicateRuleSet(string name, int majorVersion, int minorVersion, out RuleSetData duplicateRuleSetData)
         {
             foreach (RuleSetData data in ruleSetDataDictionary.Values)
@@ -271,7 +275,10 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             duplicateRuleSetData = null;
             return false;
         }
-
+        /// <summary>
+        /// build the treeview datasource using the provided ruleset collection
+        /// </summary>
+        /// <param name="ruleSetDataCollection">The Source RuleSet Collection</param>
         private void BuildTree(List<RuleSetData> ruleSetDataCollection)
         {
             ruleSetDataCollection.Sort();
@@ -301,6 +308,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             //treeView1.Sort();
         }
 
+        /// <summary>
+        /// RuleSet Name textbox lose focus handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtRuleSetName_LostFocus(object sender, RoutedEventArgs e)
         {
             //e.Cancel = false;
@@ -319,8 +331,6 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                     {
                         selectedRuleSetData.Name = txtRuleSetName.Text;
                       
-                        this.MarkDirty(selectedRuleSetData);
-
                         List<RuleSetData> ruleSetDataCollection = new List<RuleSetData>();
                         foreach (RuleSetData data in ruleSetDataDictionary.Values)
                             ruleSetDataCollection.Add(data);
@@ -337,6 +347,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
 
+        /// <summary>
+        /// Crete TreeViewItem object represent the provided RuleSet
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns>TreeViewItem represent RuleSetData</returns>
         private TreeViewItem GetTreeNodeForRuleSetData(RuleSetData data)
         {
             if (data != null)
@@ -352,6 +367,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             return null;
         }
 
+        /// <summary>
+        /// RuleSet Major version textbox lose focus handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtMajorVersion_LostFocus(object sender, RoutedEventArgs e)
         {
             //e.Cancel = false;
@@ -365,7 +385,6 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                         || duplicateData == selectedRuleSetData)
                     {
                         selectedRuleSetData.MajorVersion = majorInt;
-                        this.MarkDirty(selectedRuleSetData);
 
                         TreeViewItem selectedNode = (TreeViewItem)TreeRuleSets.SelectedItem;
                         selectedNode.Header = VersionTreeNodeText(selectedRuleSetData.MajorVersion, selectedRuleSetData.MinorVersion);
@@ -387,6 +406,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
 
+        /// <summary>
+        ///  RuleSet Minor version textbox lose focus handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtMinorVersion_LostFocus(object sender, RoutedEventArgs e)
         {
             //e.Cancel = false;
@@ -398,7 +422,6 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                     || duplicateData == selectedRuleSetData)
                 {
                     selectedRuleSetData.MinorVersion = minorInt;
-                    this.MarkDirty(selectedRuleSetData);
 
                     TreeViewItem selectedNode = (TreeViewItem)TreeRuleSets.SelectedItem;
                     selectedNode.Header = VersionTreeNodeText(selectedRuleSetData.MajorVersion, selectedRuleSetData.MinorVersion);
@@ -414,6 +437,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
 
+        /// <summary>
+        /// Delete click handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Delete_Click(object sender, RoutedEventArgs e)
         {
             TreeViewItem selectedNode = (TreeViewItem)TreeRuleSets.SelectedItem;
@@ -422,7 +450,6 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             if (IsVersionNode(selectedNode) && selectedRuleSetData != null)
             {
                 deletedRuleSetDataCollection.Add(selectedRuleSetData);
-                this.MarkDirty(selectedRuleSetData);
 
                 ruleSetDataDictionary.Remove(selectedNode);
                 parentNode.Items.Remove(selectedNode);
@@ -438,6 +465,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
 
+        /// <summary>
+        /// return true if the provided node is version node
+        /// </summary>
+        /// <param name="node"></param>
+        /// <returns></returns>
         private static bool IsVersionNode(TreeViewItem node)
         {
             if (node != null)
@@ -446,12 +478,20 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                 return false;
         }
 
+        /// <summary>
+        /// Dialog Loaded handler
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void WorkflowElementDialog_Loaded(object sender, RoutedEventArgs e)
         {
             txtMajorVersion.MaxLength = maxMajorVersions;
             txtMinorVersion.MaxLength = maxMinorVersions;           
         }
 
+        /// <summary>
+        /// Save the current Rulesets into the rules file after serlizati it to XML
+        /// </summary>
         private void SaveToFile()
         {
             if (ruleSetDataDictionary != null)
@@ -488,6 +528,11 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
 
+        /// <summary>
+        /// Serlize RuleSet object to XML
+        /// </summary>
+        /// <param name="ruleSet"></param>
+        /// <returns>RuleSet Xml serialized string</returns>
         private string SerializeRuleSet(RuleSet ruleSet)
         {
             StringBuilder ruleDefinition = new StringBuilder();
@@ -523,15 +568,9 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             return ruleDefinition.ToString();
         }
 
-        protected override void OnWorkflowElementDialogClosed(bool? dialogResult)
-        {            
-            if(dialogResult!=null && dialogResult.GetValueOrDefault() == true)
-            {
-                SaveToFile();
-            }
-            base.OnWorkflowElementDialogClosed(dialogResult);
-        }
-
+        /// <summary>
+        /// Initialize the ruleset collection and Update the UI Controls
+        /// </summary>
         private void InitializeData()
         {
             selectedRuleSetData = null;
@@ -551,10 +590,13 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
 
+        /// <summary>
+        /// Get RuleSet collation from the rules file and update the dialog properties
+        /// </summary>
+        /// <returns></returns>
         private List<RuleSetData> GetRuleSets()
         {
             List<RuleSetData> ruleSetDataCollection = new List<RuleSetData>();
-            dirty = false;
 
             if(string.IsNullOrWhiteSpace(rulesFilePath))
             {
@@ -618,7 +660,8 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
             return ruleSetDataCollection;
         }
-            
+
+        #region version textbox validation
         private static bool IsTextAllowed(string text)
         {
             return !_regex.IsMatch(text);
@@ -649,23 +692,6 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                 e.CancelCommand();
             }
         }
-
-        public IReadOnlyCollection<RuleSet> RuleSets
-        {
-            get
-            {
-                var ruleSetDataCollection = new List<RuleSetData>();
-
-                foreach (var rule in ruleSetDataDictionary.Values)
-                {                    
-                    if(!rule.Dirty)
-                    {
-                        ruleSetDataCollection.Add(rule);
-                    }
-                }
-
-                return (IReadOnlyCollection<RuleSet>)ruleSetDataCollection;
-            }
-        }
+        #endregion
     }
 }

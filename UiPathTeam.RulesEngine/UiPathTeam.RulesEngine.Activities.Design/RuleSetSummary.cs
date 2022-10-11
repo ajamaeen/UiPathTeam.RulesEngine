@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace UiPathTeam.RulesEngine.Activities.Design
 {
+    /// <summary>
+    /// Class that represent the RuleSet basic infromation:
+    /// Name, Major Version and Minor Version
+    /// </summary>
     public class RuleSetSummary
     {
         public string Name { get; set; }
