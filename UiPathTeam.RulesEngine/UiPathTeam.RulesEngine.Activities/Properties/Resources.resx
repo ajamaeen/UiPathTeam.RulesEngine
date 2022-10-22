@@ -223,42 +223,6 @@
     <value />
     <comment>activity description</comment>
   </data>
-  <data name="Authentication_Category" xml:space="preserve">
-    <value>Authentication</value>
-    <comment>category</comment>
-  </data>
-  <data name="Common_Category" xml:space="preserve">
-    <value>Common</value>
-    <comment>category</comment>
-  </data>
-  <data name="Input_Category" xml:space="preserve">
-    <value>Input</value>
-    <comment>category</comment>
-  </data>
-  <data name="Output_Category" xml:space="preserve">
-    <value>Output</value>
-    <comment>category</comment>
-  </data>
-  <data name="Options_Category" xml:space="preserve">
-    <value>Options</value>
-    <comment>category</comment>
-  </data>
-  <data name="ValidationScope_Error" xml:space="preserve">
-    <value>Cannot be used outside of a {0}.</value>
-    <comment>error message; {0} is a container activity (e.g. a scope)</comment>
-  </data>
-  <data name="ValidationValue_Error" xml:space="preserve">
-    <value>Please provide a value for {0}.</value>
-    <comment>error message; {0} is the name of a missing property</comment>
-  </data>
-  <data name="ValidationExclusiveProperties_Error" xml:space="preserve">
-    <value>Please provide a value either for {0} or {1}, but not both.</value>
-    <comment>error message; {0} &amp; {1} are mutually exclusive activities</comment>
-  </data>
-  <data name="ValidationOverloadGroup_Error" xml:space="preserve">
-    <value>Please provide values for both {0} and {1}.</value>
-    <comment>error message; {0} &amp; {1} are complementary properties</comment>
-  </data>
   <data name="RuleSetEditorDialog_DisplayName" xml:space="preserve">
     <value>RuleSetEditorDialog</value>
     <comment>activity name</comment>
@@ -266,5 +230,17 @@
   <data name="RuleSetEditorDialog_Description" xml:space="preserve">
     <value />
     <comment>activity description</comment>
+  </data>
+  <data name="RuleFilePathNotSet" xml:space="preserve">
+    <value>Rule file path and rule set name need to be configured</value>
+  </data>
+  <data name="RulesetIsNotValid" xml:space="preserve">
+    <value>The ruleset is not valid. {0} validation errors found (check the ValidationErrors property for more information).</value>
+  </data>
+  <data name="RuleSetNotFoundInFile" xml:space="preserve">
+    <value>RuleSet {0} not found in {1}</value>
+  </data>
+  <data name="RulesFileNotFound" xml:space="preserve">
+    <value>Rules file {0} doesn't exist</value>
   </data>
 </root>

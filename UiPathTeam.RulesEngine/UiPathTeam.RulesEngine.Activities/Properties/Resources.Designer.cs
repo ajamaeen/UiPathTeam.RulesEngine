@@ -19,7 +19,7 @@ namespace UiPathTeam.RulesEngine.Activities.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
@@ -133,6 +133,15 @@ namespace UiPathTeam.RulesEngine.Activities.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rule file path and rule set name need to be configured.
+        /// </summary>
+        public static string RuleFilePathNotSet {
+            get {
+                return ResourceManager.GetString("RuleFilePathNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to .
         /// </summary>
         public static string RuleSetEditor_Description {
@@ -165,6 +174,33 @@ namespace UiPathTeam.RulesEngine.Activities.Properties {
         public static string RuleSetEditorDialog_DisplayName {
             get {
                 return ResourceManager.GetString("RuleSetEditorDialog_DisplayName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The ruleset is not valid. {0} validation errors found (check the ValidationErrors property for more information)..
+        /// </summary>
+        public static string RulesetIsNotValid {
+            get {
+                return ResourceManager.GetString("RulesetIsNotValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RuleSet {0} not found in {1}.
+        /// </summary>
+        public static string RuleSetNotFoundInFile {
+            get {
+                return ResourceManager.GetString("RuleSetNotFoundInFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rules file {0} doesn&apos;t exist.
+        /// </summary>
+        public static string RulesFileNotFound {
+            get {
+                return ResourceManager.GetString("RulesFileNotFound", resourceCulture);
             }
         }
         
