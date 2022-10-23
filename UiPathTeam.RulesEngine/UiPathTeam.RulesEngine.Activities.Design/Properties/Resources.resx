@@ -141,4 +141,64 @@
     <value>Editing</value>
     <comment>label</comment>
   </data>
+  <data name="ErrorParsingTableRow" xml:space="preserve">
+    <value>Error parsing table row.</value>
+  </data>
+  <data name="ErrorSavingRuleSets" xml:space="preserve">
+    <value>Error saving RuleSets to {0}.</value>
+  </data>
+  <data name="ErrorSerializingRuleSet" xml:space="preserve">
+    <value>Error serializing RuleSet: '{0}'. \r\n\n{1}</value>
+  </data>
+  <data name="ErrorSerializingRuleSetErrorMessageOnly" xml:space="preserve">
+    <value>Error serializing RuleSet. \r\n\n{0}</value>
+  </data>
+  <data name="ErrorSerializingRuleSetGenaric" xml:space="preserve">
+    <value>Error Serializing RuleSet.</value>
+  </data>
+  <data name="ErrorSerializingRuleSetWithNameOnly" xml:space="preserve">
+    <value>Error serializing RuleSet: '{0}'.</value>
+  </data>
+  <data name="InvalidTargetObject" xml:space="preserve">
+    <value>Invalid target object</value>
+  </data>
+  <data name="MajorVersionNumberMustBeGreaterThan0" xml:space="preserve">
+    <value>Major version number must be greater than 0</value>
+  </data>
+  <data name="RuleSetAlreadyExists" xml:space="preserve">
+    <value>A RuleSet with the same name and version numbers already exists.</value>
+  </data>
+  <data name="RuleSetCollectionIsEmpty" xml:space="preserve">
+    <value>RuleSet collection is empty.</value>
+  </data>
+  <data name="RuleSetNameCannotBeEmpty" xml:space="preserve">
+    <value>RuleSet Name cannot be empty.</value>
+  </data>
+  <data name="RulesetNameNotFoundInFile" xml:space="preserve">
+    <value>Ruleset name {0} not found in {1}</value>
+  </data>
+  <data name="RuleSetNameNotSet" xml:space="preserve">
+    <value>RuleSet Name needs to be configured before viewing or editing the rules</value>
+  </data>
+  <data name="RuleSetOpenError" xml:space="preserve">
+    <value>RuleSet Open Error</value>
+  </data>
+  <data name="RuleSetPropertyError" xml:space="preserve">
+    <value>RuleSet Property Error</value>
+  </data>
+  <data name="RulesFileIsNotWriteable" xml:space="preserve">
+    <value>Rules file is not writeable. Created copy of your changes in </value>
+  </data>
+  <data name="RulesFilePathNotSet" xml:space="preserve">
+    <value>Rules file Path needs to be configured before viewing or editing the rules.</value>
+  </data>
+  <data name="SaveError" xml:space="preserve">
+    <value>Save Error</value>
+  </data>
+  <data name="SerializationError" xml:space="preserve">
+    <value>Serialization Error</value>
+  </data>
+  <data name="TargetObjectNotSet" xml:space="preserve">
+    <value>TargetObject needs to be configured before viewing or editing the rules</value>
+  </data>
 </root>

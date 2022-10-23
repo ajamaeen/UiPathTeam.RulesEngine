@@ -17,6 +17,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design
     using System.Xml;
     using UiPath.Shared.Activities.Design.Controls;
     using UiPath.Shared.Activities.Design.Services;
+    using UiPath.Shared.Localization;
     using UiPathTeam.RulesEngine.Activities.Design;
     using UiPathTeam.RulesEngine.Activities.Design.Dialogs;
 
@@ -54,8 +55,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design
 
             if (string.IsNullOrWhiteSpace(rulesFilePath))
             {
-                System.Windows.Forms.MessageBox.Show("Rules file Path needs to be configured before viewing or editing the rules.",
-                                                     "RuleSet Property Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(SharedResources.RulesFilePathNotSet,SharedResources.RuleSetPropertyError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -112,21 +112,21 @@ namespace UiPathTeam.RulesEngine.Activities.Design
 
             if (string.IsNullOrWhiteSpace(rulesFilePath))
             {
-                System.Windows.MessageBox.Show("Rules file Path needs to be configured before viewing or editing the rules");
+                System.Windows.MessageBox.Show(SharedResources.RulesFilePathNotSet);
                 return;
             }
 
             string ruleSetName = ModelItem.GetInArgumentValue<string>(ruleSetNameProperty);
             if (string.IsNullOrWhiteSpace(ruleSetName))
             {
-                System.Windows.MessageBox.Show("RuleSet Name needs to be configured before viewing or editing the rules");
+                System.Windows.MessageBox.Show(SharedResources.RuleSetNameNotSet);
                 return;
             }
 
             ModelItem targetObjectModelItem = ModelItem.Properties["TargetObject"].Value;
             if (targetObjectModelItem == null || targetObjectModelItem.GetCurrentValue() == null)
             {
-                System.Windows.MessageBox.Show("TargetObject needs to be configured before viewing or editing the rules");
+                System.Windows.MessageBox.Show(SharedResources.TargetObjectNotSet);
                 return;
             }
 
@@ -134,7 +134,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             InArgument targetObjArg = targetObjectModelItem.GetCurrentValue() as InArgument;
             if (targetObjArg == null)
             {
-                System.Windows.MessageBox.Show("Invalid target object");
+                System.Windows.MessageBox.Show(SharedResources.InvalidTargetObject);
                 return;
             }
 
@@ -157,12 +157,12 @@ namespace UiPathTeam.RulesEngine.Activities.Design
                         ruleDefs = ser.Deserialize(reader) as RuleDefinitions;
                         if (!ruleDefs.RuleSets.Contains(ruleSetName))
                         {
-                            throw new InvalidOperationException($"Ruleset name {ruleSetName} not found in {rulesFilePath}");
+                            throw new InvalidOperationException(String.Format(SharedResources.RulesetNameNotFoundInFile, ruleSetName, rulesFilePath));
                         }
                         ruleSet = ruleDefs.RuleSets[ruleSetName];
                     }
 
-                    // popup the dialog for viewing the rules
+                    // pop-up the dialog for viewing the rules
                     ruleSetDialog = new RuleSetDialog(targetObjectType, null, ruleSet);
                     //TweakRuleSetDialogToResizable(ruleSetDialog);
                     result = ruleSetDialog.ShowDialog();
@@ -202,7 +202,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design
                         {
                             ser.Serialize(xmlTW, ruleDefs);
                         }
-                        System.Windows.MessageBox.Show("Rules file is not writeable. Created copy of your changes in " + localFileCopy);
+                        System.Windows.MessageBox.Show(SharedResources.RulesFileIsNotWriteable + localFileCopy);
                     }
                 }
             }
@@ -308,7 +308,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design
                     }
                     catch (InvalidCastException)
                     {
-                        System.Windows.Forms.MessageBox.Show("Error parsing table row.", "RuleSet Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        System.Windows.Forms.MessageBox.Show(SharedResources.ErrorParsingTableRow, SharedResources.RuleSetOpenError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     finally
                     {

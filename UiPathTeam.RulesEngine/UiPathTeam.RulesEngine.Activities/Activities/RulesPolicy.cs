@@ -10,11 +10,12 @@ using System.Workflow.ComponentModel.Compiler;
 using System.Workflow.ComponentModel.Serialization;
 using System.Xml;
 using System.Workflow.Activities.Rules;
+using UiPath.Shared.Localization;
 
 namespace UiPathTeam.RulesEngine.Activities
 {
     /// <summary>
-    /// This activity allows openening an existing .rules file
+    /// This activity allows opening an existing .rules file
     /// and execute one of its rules against a TargetObject.
     /// Users can modify the ruleset (add, update, delete rules).
     [LocalizedDisplayName(nameof(Resources.RulesPolicy_DisplayName))]
@@ -109,12 +110,12 @@ namespace UiPathTeam.RulesEngine.Activities
 
             if (string.IsNullOrWhiteSpace(rulesfilepath) || string.IsNullOrWhiteSpace(rulesetname))
             {
-                throw new InvalidOperationException("Rule file path and rule set name need to be configured");
+                throw new InvalidOperationException(SharedResources.RuleFilePathNotSet);
             }
 
             if (!File.Exists(rulesfilepath))
             {
-                throw new InvalidOperationException("Rules file " + RulesFilePath + " doesn't exist");
+                throw new InvalidOperationException(SharedResources.RulesFileNotFound);
             }
 
             // Get the RuleSet from the .rules file
@@ -125,7 +126,7 @@ namespace UiPathTeam.RulesEngine.Activities
 
             if (ruleSet == null)
             {
-                throw new InvalidOperationException("RuleSet " + rulesetname + " not found in " + rulesfilepath);
+                throw new InvalidOperationException(String.Format(SharedResources.RuleSetNotFoundInFile,rulesetname,rulesfilepath));
             }
             
             // Validate before running
@@ -137,7 +138,7 @@ namespace UiPathTeam.RulesEngine.Activities
                 this.ValidationErrors.Set(context, validation.Errors);
 
                 // Throw exception
-                throw new ValidationException(string.Format("The ruleset is not valid. {0} validation errors found (check the ValidationErrors property for more information).", validation.Errors.Count));
+                throw new ValidationException(string.Format(SharedResources.RulesetIsNotValid, validation.Errors.Count));
             }
 
             // Execute the ruleset

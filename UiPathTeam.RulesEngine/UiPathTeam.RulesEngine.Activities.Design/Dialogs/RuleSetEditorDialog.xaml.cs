@@ -25,10 +25,11 @@ using System.Workflow.ComponentModel.Serialization;
 using System.Xml;
 using System.Xml.Linq;
 using UiPath.Shared.Activities.Design.Services;
+using UiPath.Shared.Localization;
 
 namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
 {
-    public partial class RuleSetEditorDialog : WorkflowElementDialog
+    public partial class RuleSetEditorDialog : WorkflowElementDialog 
     {
 
         #region Properties
@@ -208,7 +209,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         /// <summary>
         /// Return true if the provided ruleset name is found within the current rulesets collection, otherwise it will return false.
         /// </summary>
-        /// <param name="name">the ruleset name to serach for</param>
+        /// <param name="name">the ruleset name to search for</param>
         /// <returns>true if ruleset with this name is found else false.</returns>
         private bool IsDuplicateRuleSetName(string name)
         {
@@ -320,7 +321,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             {
                 if (String.IsNullOrEmpty(txtRuleSetName.Text))
                 {
-                    System.Windows.Forms.MessageBox.Show("RuleSet Name cannot be empty.", "RuleSet Property Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    System.Windows.Forms.MessageBox.Show(SharedResources.RuleSetNameCannotBeEmpty, SharedResources.RuleSetPropertyError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     txtRuleSetName.Text = selectedRuleSetData.Name;
                 }
                 else if (txtRuleSetName.Text != selectedRuleSetData.Name)
@@ -340,7 +341,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                     }
                     else
                     {
-                        System.Windows.Forms.MessageBox.Show("A RuleSet with the same name and version numbers already exists.", "RuleSet Property Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        System.Windows.Forms.MessageBox.Show(SharedResources.RuleSetAlreadyExists, SharedResources.RuleSetPropertyError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         //e.Cancel = true;
                     }
                 }
@@ -394,13 +395,13 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                     }
                     else
                     {
-                        System.Windows.Forms.MessageBox.Show("A RuleSet with the same name and version numbers already exists.", "RuleSet Property Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        System.Windows.Forms.MessageBox.Show(SharedResources.RuleSetAlreadyExists, SharedResources.RuleSetPropertyError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                         //e.Cancel = true;
                     }
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show("Major version number must be greater than 0", "RuleSet Property Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    System.Windows.Forms.MessageBox.Show(SharedResources.MajorVersionNumberMustBeGreaterThan0, SharedResources.RuleSetPropertyError, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     //e.Cancel = true;
                 }
             }
@@ -431,7 +432,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                 }
                 else
                 {
-                    System.Windows.Forms.MessageBox.Show("A RuleSet with the same name and version numbers already exists.", "RuleSet Property Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    System.Windows.Forms.MessageBox.Show(SharedResources.RuleSetAlreadyExists, SharedResources.RuleSetPropertyError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     //e.Cancel = true;
                 }
             }
@@ -490,7 +491,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         }
 
         /// <summary>
-        /// Save the current Rulesets into the rules file after serlizati it to XML
+        /// Save the current Rulesets into the rules file after serialization it to XML
         /// </summary>
         private void SaveToFile()
         {
@@ -517,22 +518,22 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                     //// create local file by adding a random suffix to original filename
                     //string localFileCopy = fileInfo.Name.Substring(0, fileInfo.Name.IndexOf('.')) + new Random().Next() + fileInfo.Extension;
                     //ser.Serialize(new System.Xml.XmlTextWriter((string)localFileCopy, null), ruleDefs);
-                    System.Windows.Forms.MessageBox.Show(string.Format(CultureInfo.InvariantCulture, $"Error saving RuleSets to {rulesFilePath}. \r\n\n", ex.Message), "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    //System.Windows.MessageBox.Show("Rules file is not writeable. Created copy of your changes in " + localFileCopy);
+                    System.Windows.Forms.MessageBox.Show(string.Format(CultureInfo.InvariantCulture, String.Format(SharedResources.ErrorSavingRuleSets, rulesFilePath), ex.Message), SharedResources.SaveError, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    //System.Windows.MessageBox.Show("Rules file is not writable. Created copy of your changes in " + localFileCopy);
                 }
                 InitializeData();
             }
             else
             {
-                System.Windows.Forms.MessageBox.Show("RuleSet collection is empty.", "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                System.Windows.Forms.MessageBox.Show(SharedResources.RuleSetCollectionIsEmpty, SharedResources.SaveError, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
         }
 
         /// <summary>
-        /// Serlize RuleSet object to XML
+        /// Serialize RuleSet object to XML
         /// </summary>
         /// <param name="ruleSet"></param>
-        /// <returns>RuleSet Xml serialized string</returns>
+        /// <returns>RuleSet XML serialized string</returns>
         private string SerializeRuleSet(RuleSet ruleSet)
         {
             StringBuilder ruleDefinition = new StringBuilder();
@@ -552,17 +553,17 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                 catch (Exception ex)
                 {
                     if (selectedRuleSetData != null)
-                        System.Windows.Forms.MessageBox.Show(string.Format(CultureInfo.InvariantCulture, "Error serializing RuleSet: '{0}'. \r\n\n{1}", selectedRuleSetData.Name, ex.Message), "Serialization Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        System.Windows.Forms.MessageBox.Show(string.Format(CultureInfo.InvariantCulture, SharedResources.ErrorSerializingRuleSet, selectedRuleSetData.Name, ex.Message), SharedResources.SerializationError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     else
-                        System.Windows.Forms.MessageBox.Show(string.Format(CultureInfo.InvariantCulture, "Error serializing RuleSet. \r\n\n{0}", ex.Message), "Serialization Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        System.Windows.Forms.MessageBox.Show(string.Format(CultureInfo.InvariantCulture, SharedResources.ErrorSerializingRuleSetErrorMessageOnly, ex.Message), SharedResources.SerializationError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else
             {
                 if (selectedRuleSetData != null)
-                    System.Windows.Forms.MessageBox.Show(String.Format(CultureInfo.InvariantCulture, "Error serializing RuleSet: '{0}'.", selectedRuleSetData.Name), "Serialization Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    System.Windows.Forms.MessageBox.Show(String.Format(CultureInfo.InvariantCulture, SharedResources.ErrorSerializingRuleSetWithNameOnly, selectedRuleSetData.Name), SharedResources.SerializationError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 else
-                    System.Windows.Forms.MessageBox.Show("Error serializing RuleSet.", "Serialization Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    System.Windows.Forms.MessageBox.Show(SharedResources.ErrorSerializingRuleSetGenaric, SharedResources.SerializationError, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return ruleDefinition.ToString();
@@ -650,7 +651,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                 }
                 catch (InvalidCastException)
                 {
-                    System.Windows.Forms.MessageBox.Show("Error parsing table row.", "RuleSet Open Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    System.Windows.Forms.MessageBox.Show(SharedResources.ErrorParsingTableRow, SharedResources.RuleSetOpenError, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {

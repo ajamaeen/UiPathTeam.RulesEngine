@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace UiPathTeam.RulesEngine.Activities.Design
 {
     /// <summary>
-    /// Class that represent the RuleSet basic infromation:
+    /// Class that represent the RuleSet basic information:
     /// Name, Major Version and Minor Version
     /// </summary>
     public class RuleSetSummary

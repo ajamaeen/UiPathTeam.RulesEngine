@@ -8,10 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-using System;
-
-namespace UiPathTeam.RulesEngine.Activities.Design.Properties
-{
+namespace UiPathTeam.RulesEngine.Activities.Design.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -19,118 +19,278 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Properties
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Resources
-    {
-
+    public class Resources {
+        
         private static global::System.Resources.ResourceManager resourceMan;
-
+        
         private static global::System.Globalization.CultureInfo resourceCulture;
-
+        
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Resources()
-        {
+        internal Resources() {
         }
-
+        
         /// <summary>
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Resources.ResourceManager ResourceManager
-        {
-            get
-            {
-                if (object.ReferenceEquals(resourceMan, null))
-                {
+        public static global::System.Resources.ResourceManager ResourceManager {
+            get {
+                if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("UiPathTeam.RulesEngine.Activities.Design.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-
+        
         /// <summary>
         ///   Overrides the current thread's CurrentUICulture property for all
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        public static global::System.Globalization.CultureInfo Culture
-        {
-            get
-            {
+        public static global::System.Globalization.CultureInfo Culture {
+            get {
                 return resourceCulture;
             }
-            set
-            {
+            set {
                 resourceCulture = value;
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to UiPathTeam.RulesEngine.
         /// </summary>
-        public static string Category
-        {
-            get
-            {
+        public static string Category {
+            get {
                 return ResourceManager.GetString("Category", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Collection.
         /// </summary>
-        public static string Collection
-        {
-            get
-            {
+        public static string Collection {
+            get {
                 return ResourceManager.GetString("Collection", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Do.
         /// </summary>
-        public static string Do
-        {
-            get
-            {
+        public static string Do {
+            get {
                 return ResourceManager.GetString("Do", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Double-click to view.
         /// </summary>
-        public static string DoubleClickToView
-        {
-            get
-            {
+        public static string DoubleClickToView {
+            get {
                 return ResourceManager.GetString("DoubleClickToView", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Drop Activity Here.
         /// </summary>
-        public static string DropActivityHere
-        {
-            get
-            {
+        public static string DropActivityHere {
+            get {
                 return ResourceManager.GetString("DropActivityHere", resourceCulture);
             }
         }
-
+        
         /// <summary>
         ///   Looks up a localized string similar to Editing.
         /// </summary>
-        public static string Editing
-        {
-            get
-            {
+        public static string Editing {
+            get {
                 return ResourceManager.GetString("Editing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error parsing table row..
+        /// </summary>
+        public static string ErrorParsingTableRow {
+            get {
+                return ResourceManager.GetString("ErrorParsingTableRow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error saving RuleSets to {0}..
+        /// </summary>
+        public static string ErrorSavingRuleSets {
+            get {
+                return ResourceManager.GetString("ErrorSavingRuleSets", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error serializing RuleSet: &apos;{0}&apos;. \r\n\n{1}.
+        /// </summary>
+        public static string ErrorSerializingRuleSet {
+            get {
+                return ResourceManager.GetString("ErrorSerializingRuleSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error serializing RuleSet. \r\n\n{0}.
+        /// </summary>
+        public static string ErrorSerializingRuleSetErrorMessageOnly {
+            get {
+                return ResourceManager.GetString("ErrorSerializingRuleSetErrorMessageOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error Serializing RuleSet..
+        /// </summary>
+        public static string ErrorSerializingRuleSetGenaric {
+            get {
+                return ResourceManager.GetString("ErrorSerializingRuleSetGenaric", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error serializing RuleSet: &apos;{0}&apos;..
+        /// </summary>
+        public static string ErrorSerializingRuleSetWithNameOnly {
+            get {
+                return ResourceManager.GetString("ErrorSerializingRuleSetWithNameOnly", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid target object.
+        /// </summary>
+        public static string InvalidTargetObject {
+            get {
+                return ResourceManager.GetString("InvalidTargetObject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Major version number must be greater than 0.
+        /// </summary>
+        public static string MajorVersionNumberMustBeGreaterThan0 {
+            get {
+                return ResourceManager.GetString("MajorVersionNumberMustBeGreaterThan0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A RuleSet with the same name and version numbers already exists..
+        /// </summary>
+        public static string RuleSetAlreadyExists {
+            get {
+                return ResourceManager.GetString("RuleSetAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RuleSet collection is empty..
+        /// </summary>
+        public static string RuleSetCollectionIsEmpty {
+            get {
+                return ResourceManager.GetString("RuleSetCollectionIsEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RuleSet Name cannot be empty..
+        /// </summary>
+        public static string RuleSetNameCannotBeEmpty {
+            get {
+                return ResourceManager.GetString("RuleSetNameCannotBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ruleset name {0} not found in {1}.
+        /// </summary>
+        public static string RulesetNameNotFoundInFile {
+            get {
+                return ResourceManager.GetString("RulesetNameNotFoundInFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RuleSet Name needs to be configured before viewing or editing the rules.
+        /// </summary>
+        public static string RuleSetNameNotSet {
+            get {
+                return ResourceManager.GetString("RuleSetNameNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RuleSet Open Error.
+        /// </summary>
+        public static string RuleSetOpenError {
+            get {
+                return ResourceManager.GetString("RuleSetOpenError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to RuleSet Property Error.
+        /// </summary>
+        public static string RuleSetPropertyError {
+            get {
+                return ResourceManager.GetString("RuleSetPropertyError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rules file is not writeable. Created copy of your changes in .
+        /// </summary>
+        public static string RulesFileIsNotWriteable {
+            get {
+                return ResourceManager.GetString("RulesFileIsNotWriteable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rules file Path needs to be configured before viewing or editing the rules..
+        /// </summary>
+        public static string RulesFilePathNotSet {
+            get {
+                return ResourceManager.GetString("RulesFilePathNotSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Error.
+        /// </summary>
+        public static string SaveError {
+            get {
+                return ResourceManager.GetString("SaveError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Serialization Error.
+        /// </summary>
+        public static string SerializationError {
+            get {
+                return ResourceManager.GetString("SerializationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TargetObject needs to be configured before viewing or editing the rules.
+        /// </summary>
+        public static string TargetObjectNotSet {
+            get {
+                return ResourceManager.GetString("TargetObjectNotSet", resourceCulture);
             }
         }
     }
