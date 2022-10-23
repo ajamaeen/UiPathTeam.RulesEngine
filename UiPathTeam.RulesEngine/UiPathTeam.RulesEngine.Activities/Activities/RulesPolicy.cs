@@ -142,7 +142,7 @@ namespace UiPathTeam.RulesEngine.Activities
 
             // Execute the ruleset
             object evaluatedTarget = this.TargetObject.Get(context);
-            RuleEngine engine = new RuleEngine(ruleSet, validation);
+            RuleEngine engine = new RuleEngine(ruleSet, validation);            
             engine.Execute(evaluatedTarget);
 
             // Update the Result object
