@@ -57,6 +57,18 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             InitializeData();
             EnableOk(false);
         }
+
+        /// <summary>
+        /// Constructor with activity model item information , the model should have In Argument with name [RulesFilePath]
+        /// </summary>
+        /// <param name="modelItem">Owner Activity Model Item , this model should have In Argument with name [RulesFilePath]</param>
+        public RuleSetEditorDialog(string rulesFilePath)
+        {
+            InitializeComponent();            
+            this.rulesFilePath = rulesFilePath;
+            InitializeData();
+            EnableOk(false);
+        }
         #endregion
 
         /// <summary>

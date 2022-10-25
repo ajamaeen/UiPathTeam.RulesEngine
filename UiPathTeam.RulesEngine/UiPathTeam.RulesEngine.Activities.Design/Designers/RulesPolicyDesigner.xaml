@@ -77,7 +77,7 @@
             MaxLines="1"
             Grid.Row="3" Grid.Column="1" Margin="5, 5" />
 
-            <Button Content="Edit RuleSets" Name="btnEditRuleSets" Click="btnEditRuleSets_Click"
+            <Button Content="RuleSet Browser" Name="btnEditRuleSets" Click="btnEditRuleSets_Click"
                     Width="100"
                     Height="25"      
                     HorizontalAlignment="Left"
