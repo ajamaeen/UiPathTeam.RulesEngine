@@ -34,6 +34,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
 
         #region Properties
         private Dictionary<TreeViewItem, RuleSetData> ruleSetDataDictionary = new Dictionary<TreeViewItem, RuleSetData>();
+         private bool dirty; //indicates if any RuleSetData has been modified
         private readonly string rulesFilePath;
         private RuleSetData selectedRuleSetData;
         private List<RuleSetData> deletedRuleSetDataCollection = new List<RuleSetData>();
@@ -194,6 +195,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                 data.RuleSet = new RuleSet(data.Name);
             }
             data.MajorVersion = 1;
+            this.MarkDirty(data);
             return data;
         }
         /// <summary>
@@ -218,6 +220,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             return newName;
         }
 
+
         /// <summary>
         /// Return true if the provided ruleset name is found within the current rulesets collection, otherwise it will return false.
         /// </summary>
@@ -233,6 +236,14 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                 }
             }
             return false;
+        }
+
+        private void MarkDirty(RuleSetData data)
+        {
+            if (data != null)
+                data.Dirty = true;
+
+            dirty = true;
         }
 
         /// <summary>
@@ -344,6 +355,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                     {
                         selectedRuleSetData.Name = txtRuleSetName.Text;
                       
+                        this.MarkDirty(selectedRuleSetData);
                         List<RuleSetData> ruleSetDataCollection = new List<RuleSetData>();
                         foreach (RuleSetData data in ruleSetDataDictionary.Values)
                             ruleSetDataCollection.Add(data);
@@ -398,6 +410,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                         || duplicateData == selectedRuleSetData)
                     {
                         selectedRuleSetData.MajorVersion = majorInt;
+                        this.MarkDirty(selectedRuleSetData);
 
                         TreeViewItem selectedNode = (TreeViewItem)TreeRuleSets.SelectedItem;
                         selectedNode.Header = VersionTreeNodeText(selectedRuleSetData.MajorVersion, selectedRuleSetData.MinorVersion);
@@ -435,6 +448,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
                     || duplicateData == selectedRuleSetData)
                 {
                     selectedRuleSetData.MinorVersion = minorInt;
+                    this.MarkDirty(selectedRuleSetData);
 
                     TreeViewItem selectedNode = (TreeViewItem)TreeRuleSets.SelectedItem;
                     selectedNode.Header = VersionTreeNodeText(selectedRuleSetData.MajorVersion, selectedRuleSetData.MinorVersion);
@@ -463,6 +477,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             if (IsVersionNode(selectedNode) && selectedRuleSetData != null)
             {
                 deletedRuleSetDataCollection.Add(selectedRuleSetData);
+                 this.MarkDirty(selectedRuleSetData);
 
                 ruleSetDataDictionary.Remove(selectedNode);
                 parentNode.Items.Remove(selectedNode);
@@ -581,6 +596,16 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             return ruleDefinition.ToString();
         }
 
+
+        protected override void OnWorkflowElementDialogClosed(bool? dialogResult)
+        {
+            if (dialogResult != null && dialogResult.GetValueOrDefault() == true)
+            {
+                SaveToFile();
+            }
+            base.OnWorkflowElementDialogClosed(dialogResult);
+        }
+
         /// <summary>
         /// Initialize the ruleset collection and Update the UI Controls
         /// </summary>
@@ -610,7 +635,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
         private List<RuleSetData> GetRuleSets()
         {
             List<RuleSetData> ruleSetDataCollection = new List<RuleSetData>();
-
+             dirty = false;
             if(string.IsNullOrWhiteSpace(rulesFilePath))
             {
                 return ruleSetDataCollection;
@@ -706,5 +731,22 @@ namespace UiPathTeam.RulesEngine.Activities.Design.Dialogs
             }
         }
         #endregion
+        public IReadOnlyCollection<RuleSet> RuleSets
+        {
+            get
+            {
+                var ruleSetDataCollection = new List<RuleSetData>();
+
+                foreach (var rule in ruleSetDataDictionary.Values)
+                {
+                    if (!rule.Dirty)
+                    {
+                        ruleSetDataCollection.Add(rule);
+                    }
+                }
+
+                return (IReadOnlyCollection<RuleSet>)ruleSetDataCollection;
+            }
+        }
     }
 }
