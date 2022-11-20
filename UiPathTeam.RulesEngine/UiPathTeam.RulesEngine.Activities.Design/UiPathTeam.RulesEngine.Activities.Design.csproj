@@ -100,7 +100,9 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\UiPathTeam.RulesEngine.Activities\UiPathTeam.RulesEngine.Activities.csproj" PrivateAssets="All" />
-    <ProjectReference Include="..\UiPathTeam.RulesEngine\UiPathTeam.RulesEngine.csproj" />
+    <ProjectReference Include="..\UiPathTeam.RulesEngine\UiPathTeam.RulesEngine.csproj">
+      <PrivateAssets>ALL</PrivateAssets>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Properties\Resources.Designer.cs">
