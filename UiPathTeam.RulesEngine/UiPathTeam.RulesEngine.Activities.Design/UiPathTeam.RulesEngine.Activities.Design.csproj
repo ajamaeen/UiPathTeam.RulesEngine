@@ -9,11 +9,11 @@
   <PropertyGroup>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <Description>Rule engine Activity</Description>
-    <Authors>UiPath</Authors>
+    <Description>Custom Rule Engine Activity For UiPath</Description>
+    <Authors>Amer Aljamaeen and Omar Saleh</Authors>
     <Company>UiPath</Company>
     <Copyright>© 2022 UiPath</Copyright>
-    <PackageTags>UiPath Activit𝗒</PackageTags>
+    <PackageTags>UiPath,Rules Engine</PackageTags>
     <PackageProjectUrl>https://docs.uipath.com/integrations/docs/how-to-create-activities</PackageProjectUrl>
     <PackageIconUrl>https://raw.githubusercontent.com/NuGet/Samples/master/PackageIconNuspecExample/icon.png</PackageIconUrl>
     <!--<PackageIcon>packageIcon.png</PackageIcon>-->
@@ -26,10 +26,10 @@
 
   <!-- Package Versions -->
   <PropertyGroup Condition="'$(Configuration)' == 'Debug' AND '$(DesignTimeBuild)' != 'true'">
-    <PackageVersion>0.1.0.$([System.DateTime]::UtcNow.ToString(MMddHHmmss))</PackageVersion>
+    <PackageVersion>1.0.0.$([System.DateTime]::UtcNow.ToString(MMddHHmmss))</PackageVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
-    <PackageVersion>0.1.0.$([System.DateTime]::UtcNow.ToString(MMddHHmmss))</PackageVersion>
+    <PackageVersion>1.0.0</PackageVersion>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Designers\RulesPolicyDesigner.xaml" />
@@ -56,6 +56,7 @@
   <PropertyGroup>
     <OutputPath>bin\$(Configuration)\</OutputPath>
     <DocumentationFile>bin\$(Configuration)\UiPathTeam.RulesEngine.Activities.Design.xml</DocumentationFile>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 	<ItemGroup>
 		<Reference Include="System" />

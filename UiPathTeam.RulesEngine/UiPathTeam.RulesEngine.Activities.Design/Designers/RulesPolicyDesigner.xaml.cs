@@ -112,21 +112,21 @@ namespace UiPathTeam.RulesEngine.Activities.Design
 
             if (string.IsNullOrWhiteSpace(rulesFilePath))
             {
-                System.Windows.MessageBox.Show(SharedResources.RulesFilePathNotSet);
+                System.Windows.Forms.MessageBox.Show(SharedResources.RulesFilePathNotSet, SharedResources.RulesFilePathNotSet, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             string ruleSetName = ModelItem.GetInArgumentValue<string>(ruleSetNameProperty);
             if (string.IsNullOrWhiteSpace(ruleSetName))
             {
-                System.Windows.MessageBox.Show(SharedResources.RuleSetNameNotSet);
+                System.Windows.Forms.MessageBox.Show(SharedResources.RuleSetNameNotSet, SharedResources.RuleSetNameNotSet, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             ModelItem targetObjectModelItem = ModelItem.Properties["TargetObject"].Value;
             if (targetObjectModelItem == null || targetObjectModelItem.GetCurrentValue() == null)
             {
-                System.Windows.MessageBox.Show(SharedResources.TargetObjectNotSet);
+                System.Windows.Forms.MessageBox.Show(SharedResources.TargetObjectNotSet, SharedResources.TargetObjectNotSet, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -134,7 +134,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design
             InArgument targetObjArg = targetObjectModelItem.GetCurrentValue() as InArgument;
             if (targetObjArg == null)
             {
-                System.Windows.MessageBox.Show(SharedResources.InvalidTargetObject);
+                System.Windows.Forms.MessageBox.Show(SharedResources.InvalidTargetObject, SharedResources.InvalidTargetObject, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -202,7 +202,7 @@ namespace UiPathTeam.RulesEngine.Activities.Design
                         {
                             ser.Serialize(xmlTW, ruleDefs);
                         }
-                        System.Windows.MessageBox.Show(SharedResources.RulesFileIsNotWriteable + localFileCopy);
+                        System.Windows.Forms.MessageBox.Show(SharedResources.RulesFileIsNotWriteable + localFileCopy);
                     }
                 }
             }
