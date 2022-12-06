@@ -1,4 +1,4 @@
-# UiPathTeam.RulesEngine
+# UiPathTeam.RulesEngine - Windows Legacy (.Net Framework 4.6.1)
 UiPath Rules Engine is a library/NuGet package for abstracting business logic/rules/policies out of a workflow.
 
 Every developer in enterprise writes the logic in workflow using many if-else conditions and loops which complicate workflow and make it hard to debug and trace issue.
